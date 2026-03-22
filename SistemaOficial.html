@@ -1,0 +1,4299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sistema JB Santos</title>
+
+<link rel="icon" href="/favicon.png" type="image/png">
+
+
+<style>
+body{
+visibility: hidden;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://kuofgelguuzfokqltjqu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_k_WH1HT6JN_QwJCV3GN2Gw_1FqLc34l";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function verificarLogin() {
+try {
+const { data } = await supabaseClient.auth.getSession();
+
+if (!data.session) {
+window.location.replace("login.html");
+} else {
+document.body.style.visibility = "visible";
+}
+
+} catch (error) {
+console.error("Erro ao verificar login:", error);
+window.location.replace("login.html");
+}
+}
+
+verificarLogin();
+</script>
+
+<style>
+
+@media print {
+*{
+-webkit-print-color-adjust: exact !important;
+print-color-adjust: exact !important;
+}
+}
+
+.btn-group{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.btn-small{
+padding:6px 8px;
+font-size:12px;
+border:0;
+border-radius:6px;
+cursor:pointer;
+}
+
+
+.tooltip {
+position: relative;
+display: inline-block;
+}
+
+.tooltip .tooltip-text {
+visibility: hidden;
+opacity: 0;
+position: absolute;
+bottom: 125%;
+left: 50%;
+transform: translateX(-50%);
+background: #111;
+color: #fff;
+padding: 6px 10px;
+border-radius: 6px;
+font-size: 12px;
+white-space: nowrap;
+transition: opacity 0.2s ease, transform 0.2s ease;
+transform-origin: bottom;
+z-index: 999;
+}
+
+.tooltip:hover .tooltip-text {
+visibility: visible;
+opacity: 1;
+transform: translateX(-50%) translateY(-4px);
+}
+
+.btn-saldo{
+background:linear-gradient(135deg,#1fa84f,#0f7c3a);
+color:#fff;
+border:0;
+height:42px;
+padding:10px 14px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+font-size:13px;
+transition:all 0.2s ease;
+white-space:nowrap;
+}
+
+.btn-saldo:hover{
+transform:scale(1.05);
+box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+
+
+:root{
+--preto:#0f0f0f;
+--laranja:#ff7a00;
+--verde:#1fa84f;
+--vermelho:#c62828;
+}
+
+*{box-sizing:border-box;font-family:Arial}
+
+body{
+margin:0;
+background:url('fachadajb.png') no-repeat center center fixed;
+background-size:cover;
+}
+
+.app{display:flex;height:100vh}
+
+.sidebar{
+width:240px;
+background:var(--preto);
+color:#fff;
+padding:20px;
+}
+
+.sidebar img{
+max-width:150px;
+display:block;
+margin:0 auto 20px;
+}
+
+.sidebar button{
+width:100%;
+padding:15px;
+margin-bottom:10px;
+border:0;
+background:#1e1e1e;
+color:#fff;
+font-size:15px;
+cursor:pointer;
+border-radius:8px;
+}
+
+.sidebar button:hover{
+background:var(--laranja);
+color:#000;
+font-weight:bold;
+}
+
+.main{
+flex:1;
+padding:20px;
+overflow:auto;
+background:rgba(0,0,0,0.55);
+color:#fff;
+}
+
+.card{
+background:#fff;
+color:#000;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button.primary{
+background:var(--laranja);
+border:0;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+button.green{background:var(--verde);color:#fff}
+button.red{background:var(--vermelho);color:#fff}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#fff;
+color:#000;
+table-layout:fixed;
+}
+
+th{
+background:var(--preto);
+color:#fff;
+text-align:left;
+padding:12px;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #ddd;
+vertical-align:middle;
+word-wrap:break-word;
+}
+
+tr{
+height:48px;
+}
+
+.pdv-container{display:flex;gap:20px}
+.pdv-left{flex:2}
+.pdv-right{flex:1}
+
+.total-box{
+background:#000;
+color:#fff;
+padding:20px;
+border-radius:14px;
+text-align:right;
+box-shadow:0 8px 25px rgba(0,0,0,0.6);
+}
+
+.total-box .resumo{
+font-size:14px;
+opacity:0.8;
+margin-bottom:8px;
+}
+
+.total-box .valor-final{
+font-size:38px;
+font-weight:bold;
+color:#00ff88;
+}
+
+.big-btn{
+width:100%;
+padding:18px;
+font-size:16px;
+margin-top:10px;
+border-radius:8px;
+border:0;
+cursor:pointer;
+}
+
+.btn-remove{
+background:#d32f2f;
+color:#fff;
+border:0;
+padding:8px 14px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+}
+
+.btn-remove:hover{
+background:#ff3b3b;
+transform:scale(1.05);
+}
+
+
+
+.modal-overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal-box{
+background:#ffffff;
+color:#000;
+padding:25px;
+width:380px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.modal-box h3{
+margin-top:0;
+margin-bottom:20px;
+}
+
+.modal-box p{
+margin:5px 0;
+}
+
+.modal-box input,
+.modal-box select{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:15px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+.modal-box button{
+padding:8px 15px;
+margin-right:5px;
+border-radius:6px;
+border:1px solid #999;
+cursor:pointer;
+}
+
+
+
+
+.modal-botoes{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.btn-confirmar{
+flex:1;
+background:#28a745;
+color:#fff;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.btn-confirmar:hover{
+background:#218838;
+}
+
+.btn-cancelar{
+flex:1;
+background:#dc3545;
+color:#fff;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.btn-cancelar:hover{
+background:#c82333;
+}
+
+
+.botao-logout{
+position:fixed;
+
+top:20px;
+right:25px;
+
+background:#c62828;
+color:#fff;
+
+border:0;
+padding:10px 18px;
+
+border-radius:8px;
+font-weight:bold;
+
+cursor:pointer;
+
+z-index:999;
+transition:0.2s;
+}
+
+.botao-logout:hover{
+transform:scale(1.05);
+box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.top-right{
+position: absolute;
+top: 15px;
+right: 20px;
+
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.usuario{
+color: white;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.usuario i{
+color: #8e44ad;
+}
+
+.menu-btn{
+background: #1f1f1f;
+color: white;
+border: none;
+padding: 8px 16px;
+border-radius: 10px;
+cursor: pointer;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 6px;
+transition: 0.2s;
+}
+
+.menu-btn:hover{
+background: #2c2c2c;
+}
+
+
+#tEstoque{
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+}
+
+/* cabeçalho */
+#tEstoque th{
+background:#000;
+color:#fff;
+padding:10px;
+font-weight:bold;
+text-align:center;
+}
+
+/* linhas */
+#tEstoque td{
+background:#fff;
+color:#000;
+padding:10px;
+border-bottom:1px solid #ccc;
+text-align:center;
+}
+
+/* larguras das colunas */
+#tEstoque th:nth-child(1), #tEstoque td:nth-child(1){width:120px;}
+#tEstoque th:nth-child(2), #tEstoque td:nth-child(2){width:40%; text-align:left;}
+#tEstoque th:nth-child(3), #tEstoque td:nth-child(3){width:90px;}
+#tEstoque th:nth-child(4), #tEstoque td:nth-child(4){width:90px;}
+#tEstoque th:nth-child(5), #tEstoque td:nth-child(5){width:120px;}
+#tEstoque th:nth-child(6), #tEstoque td:nth-child(6){width:80px;}
+
+.dashboard{
+
+display:grid;
+grid-template-columns:repeat(2,260px);
+gap:25px;
+
+justify-content:center;
+
+margin-top:40px;
+
+}
+
+.cardDash{
+
+display:flex;
+align-items:center;
+gap:15px;
+
+background:#252525;
+
+padding:18px;
+
+border-radius:12px;
+
+color:white;
+
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+
+transition:0.2s;
+
+}
+
+.cardDash:hover{
+
+transform:translateY(-3px);
+
+}
+
+.iconDash{
+
+width:45px;
+height:45px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:rgba(255,140,42,0.25);
+color:#ff8c2a;
+
+border-radius:10px;
+
+font-size:22px;
+
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
+
+}
+
+.iconDash{
+color:#2b2b2b;
+}
+
+
+.cardDash:hover .iconDash{
+background:rgba(255,140,42,0.35);
+}
+
+.cardDash span{
+
+font-size:14px;
+color:#ff8c2a; /* laranja do sistema */
+
+font-weight:500;
+
+}
+
+.cardDash h2{
+
+margin:0;
+font-size:20px;
+
+}
+
+.destaque{
+
+width:260px;
+
+margin:30px auto;
+
+}
+
+.dashboard{
+
+display:grid;
+grid-template-columns:repeat(2,260px);
+
+gap:25px;
+
+justify-content:center;
+
+margin-top:120px;
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div id="topUser" class="top-right">
+<div class="usuario">
+<span id="usuario-logado"></span>
+</div>
+
+<button class="menu-btn" onclick="logout()">🚪 Sair</button>
+</div>
+
+<div class="app">
+
+<div class="sidebar">
+<img src="LogoTransparente.png">
+<button onclick="show('inicio')">🏠 Início</button>
+<button onclick="show('produtos')">📦 Produtos</button>
+<button onclick="show('pdv')">🛒 Vendas</button>
+<button onclick="show('estoque')">📊 Estoque</button>
+<button onclick="show('clientes')">👤 Clientes</button>
+<button onclick="show('historico')">🧾 Histórico</button>
+<button onclick="show('config')">⚙ Configurações</button>
+</div>
+
+<div class="main">
+
+<section id="inicio">
+
+<h1>Bem-vindo ao Sistema JB SANTOS</h1>
+
+<div class="dashboard">
+
+<div class="cardDash">
+<div class="iconDash">💰</div>
+<div>
+<span>Lucro do dia</span>
+<h2 id="dashLucro">R$ 0.00</h2>
+</div>
+</div>
+
+<div class="cardDash">
+<div class="iconDash">🧾</div>
+<div>
+<span>Vendas do dia</span>
+<h2 id="dashVendas">0</h2>
+</div>
+</div>
+
+<div class="cardDash">
+<div class="iconDash">📦</div>
+<div>
+<span>Pedidos do dia</span>
+<h2 id="dashPedidos">0</h2>
+</div>
+</div>
+
+<div class="cardDash">
+<div class="iconDash">📊</div>
+<div>
+<span>Ticket médio</span>
+<h2 id="dashTicket">R$ 0.00</h2>
+</div>
+</div>
+
+</div>
+
+<div class="cardDash destaque">
+<div class="iconDash">👥</div>
+<div>
+<span>Clientes devendo</span>
+<h2 id="dashDevedores">0</h2>
+</div>
+</div>
+
+</section>
+
+<section id="produtos" style="display:none">
+<h1>Cadastro de Produtos</h1>
+<div class="card">
+<input id="pNome" placeholder="Produto">
+<input id="pCodigo" placeholder="Código">
+<input id="pCusto" type="number" placeholder="Custo">
+<input id="pVenda" type="number" placeholder="Venda">
+<input id="pQtd" type="number" placeholder="Quantidade">
+<input id="pMin" type="number" placeholder="Mínimo">
+<label>Unidade de Medida</label>
+<select id="pUnidade">
+<option value="">Selecionar</option>
+<option value="UN">Unidade</option>
+<option value="M">Metro</option>
+<option value="KG">Quilo</option>
+<option value="BR">Barra</option>
+<option value="PC">Peça</option>
+<option value="CX">Caixa</option>   
+</select>
+<button id="btnProduto" class="primary" onclick="addProduto()">Cadastrar</button>
+</div>
+
+   <input 
+id="pesquisaProduto"
+placeholder="Pesquisar produto ou código..."
+oninput="filtrarProdutos()"
+style="padding:8px;width:300px;margin:15px 0;border-radius:6px;border:1px solid #ccc;"
+>
+   
+<table id="tProdutos"></table>
+</section>
+
+<section id="pdv" style="display:none">
+<h1>CAIXA</h1>
+
+<div class="pdv-container">
+
+<div class="pdv-left">
+
+<div class="card">
+<input id="buscaProduto" placeholder="Digite código ou descrição" oninput="buscarProduto()">
+<select id="prod"></select>
+<input id="qtd" type="number" value="1">
+<button class="primary" onclick="addItem()">Adicionar</button>
+</div>
+
+<div class="card">
+<table id="itens"></table>
+</div>
+
+</div>
+
+<div class="pdv-right">
+
+<div style="display:flex; gap:5px;">
+<input id="clienteNome" placeholder="Nome do Cliente" onblur="buscarCliente()">
+<input type="text" id="telefoneCliente" placeholder="Telefone do cliente">
+<button class="btn-saldo" onclick="verSaldoRapido()">
+💳 Ver Saldo
+</button>
+</div>
+
+<div id="infoCliente" style="margin-top:8px;font-size:13px; display:none;"></div>
+
+<div class="card">
+<label>Forma de pagamento</label>
+<select id="formaPagamento" onchange="atualizarFormaPagamento()">
+<option value="">Selecionar</option>
+<option value="dinheiro">Dinheiro</option>
+<option value="pix">PIX</option>
+<option value="debito">Cartão Débito</option>
+<option value="cartao">Cartão Crédito</option>
+<option value="conta">Marcar na Conta</option>
+</select>
+
+<div id="areaCartao" style="display:none">
+<label>Parcelas</label>
+<select id="parcelas" onchange="calcularParcelas()">
+<option value="1">1x</option>
+<option value="2">2x</option>
+<option value="3">3x</option>
+<option value="4">4x</option>
+<option value="5">5x</option>
+<option value="6">6x</option>
+<option value="7">7x</option>
+<option value="8">8x</option>
+<option value="9">9x</option>
+<option value="10">10x</option>
+<option value="11">11x</option>
+<option value="12">12x</option>
+</select>
+<input id="valorParcela" placeholder="Valor da parcela" readonly>
+</div>
+
+<div id="areaDinheiro" style="display:none">
+<label>Valor recebido</label>
+<input type="number" id="valorRecebido" placeholder="Digite o valor recebido" oninput="calcularTroco()">
+
+<label>Troco</label>
+<input id="troco" readonly placeholder="R$ 0.00">
+</div>
+
+<div class="total-box">
+
+<div class="resumo">
+Subtotal: R$ <span id="subtotal">0.00</span><br>
+Desconto: <span id="descontoInfo">0</span>%
+</div>
+
+<div class="valor-final">
+R$ <span id="total">0.00</span>
+</div>
+
+</div>
+
+<button class="big-btn primary" onclick="toggleDesconto()">Aplicar Desconto</button>
+
+<div id="areaDesconto" style="display:none">
+<input type="number" id="valorDesconto" placeholder="Desconto %" min="0" max="100" step="0.01">
+<button class="big-btn primary" onclick="aplicarDesconto()">Confirmar</button>
+</div>
+
+<button class="big-btn green" onclick="finalizarVenda()">FINALIZAR VENDA</button>
+<button class="big-btn primary" onclick="gerarOrcamento()">GERAR ORÇAMENTO</button>
+<button class="big-btn red" style="background:#c62828" onclick="cancelarVenda()">CANCELAR VENDA</button>
+</div>
+</div>
+</section>
+
+<section id="estoque" style="display:none">
+
+<h1>Estoque</h1>
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+">
+
+<input 
+id="pesquisaEstoque"
+placeholder="Pesquisar produto ou código..."
+oninput="atualizarEstoque()"
+style="padding:8px;width:250px;border-radius:6px;border:1px solid #ccc;"
+>
+
+<div id="resumoEstoque" style="
+display:flex;
+flex-direction:column;
+align-items:flex-end;
+gap:5px;
+font-weight:bold;
+color:#fff;
+">
+
+<div>
+📦 Itens em estoque: 
+<span id="totalItensEstoque" style="color:#ff8c2a;font-size:20px;">0</span>
+</div>
+
+<div>
+💰 Valor total do estoque: 
+<span id="valorEstoque" style="color:#ff8c2a;font-size:20px;">R$ 0.00</span>
+</div>
+
+</div>
+
+</div>
+
+<table id="tEstoque"></table>
+
+</section>
+
+<section id="historico" style="display:none">
+<h1>Histórico</h1>
+
+<input 
+id="pesquisaHistorico"
+placeholder="Pesquisar cliente, tipo ou valor..."
+oninput="filtrarHistorico()"
+style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;"
+>
+
+<table id="tHistorico"></table>
+</section>
+
+<section id="config" style="display:none">
+<h1>Configurações da Empresa</h1>
+<div class="card">
+<input id="confNome" placeholder="Nome da Empresa">
+<input id="confCnpj" placeholder="CNPJ">
+<input id="confEndereco" placeholder="Endereço">
+<input id="confTelefone" placeholder="Telefone">
+<input id="confEmail" placeholder="E-mail da Empresa">
+<button id="btnSalvar" class="primary">Salvar</button>
+</div>
+</section>
+
+<section id="clientes" style="display:none">
+<h1>Clientes</h1>
+
+<div class="card">
+<input id="cNome" placeholder="Nome do Cliente">
+<input id="cTelefone" placeholder="Telefone">
+<input id="cLimite" type="number" placeholder="Limite" value="500">
+<button class="primary" onclick="cadastrarCliente()">Cadastrar Cliente</button>
+</div>
+
+<!-- BARRA DE PESQUISA -->
+<input 
+type="text" 
+id="pesquisaCliente" 
+placeholder="Pesquisar cliente..."
+onkeyup="filtrarClientes()"
+style="padding:8px;width:300px;margin:15px 0;border-radius:6px;border:1px solid #ccc;"
+>
+
+<!-- TABELA -->
+<table id="tClientes"></table>
+
+</section>
+
+</div>
+</div>
+
+
+<div id="modalEstoque" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Editar Estoque</h3>
+
+    <p><b>Produto:</b> <span id="mNome"></span></p>
+    <p><b>Código:</b> <span id="mCodigo"></span></p>
+    <p><b>Custo:</b> R$ <span id="mCusto"></span></p>
+    <p><b>Venda:</b> R$ <span id="mVenda"></span></p>
+
+    <label>Quantidade</label>
+    <input id="mQtd" type="number">
+
+    <label>Estoque Mínimo</label>
+    <input id="mMin" type="number">
+
+    <div class="modal-botoes">
+      <button class="btn-confirmar" onclick="salvarEstoque()">Salvar</button>
+      <button class="btn-cancelar" onclick="fecharModalEstoque()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+   
+<script>
+
+let produtos=JSON.parse(localStorage.getItem("produtosJB"))||[];
+let vendas=JSON.parse(localStorage.getItem("vendasJB"))||[];
+let clientes = [];
+let extratos = JSON.parse(localStorage.getItem("extratosJB")) || [];
+let numeroRecibo = parseInt(localStorage.getItem("numeroRecibo")) || 1;
+let clientePagamentoAtual = null;
+let clienteEditando = null;
+let orcamentoEmEdicaoId = null;
+let produtoEditando = null;
+
+let carrinho=[];
+let descontoAtual=0;
+
+function show(id){
+document.querySelectorAll("section").forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
+if(id==="estoque") atualizarEstoque();
+if(id==="historico") carregarHistoricoDoBanco();
+if(id==="inicio") atualizarDashboard();
+}
+
+
+
+function atualizarResumoEstoque(lista){
+
+let totalItens = 0;
+let valorTotal = 0;
+
+lista.forEach(p => {
+
+let qtd = Number(p.quantidade || 0);
+let custo = Number(p.custo || p.pCusto || 0);
+
+totalItens += qtd;
+
+valorTotal += qtd * custo;
+
+});
+
+document.getElementById("totalItensEstoque").innerText = totalItens;
+
+document.getElementById("valorEstoque").innerText =
+"R$ " + valorTotal.toFixed(2);
+
+}
+
+
+
+
+function filtrarClientes(){
+
+let termo = document.getElementById("pesquisaCliente").value.toLowerCase();
+
+let linhas = document.querySelectorAll("#tClientes tr");
+
+linhas.forEach((linha, index) => {
+
+if(index === 0) return; // ignora cabeçalho
+
+let texto = linha.innerText.toLowerCase();
+
+linha.style.display = texto.includes(termo) ? "" : "none";
+
+});
+
+}
+
+
+
+async function buscarCliente(){
+
+let nome = document.getElementById("clienteNome").value;
+
+if(!nome) return;
+
+const { data, error } = await supabaseClient
+.from("clientes")
+.select("*")
+.ilike("nome", nome)
+.limit(1)
+.single();
+
+if(error || !data){
+console.log("Cliente não encontrado");
+return;
+}
+
+document.getElementById("telefoneCliente").value = data.telefone || "";
+
+}
+
+
+
+function filtrarProdutos(){
+
+let termo = document.getElementById("pesquisaProduto").value.toLowerCase();
+
+let linhas = document.querySelectorAll("#tProdutos tr");
+
+linhas.forEach((linha, index) => {
+
+   if(index === 0) return; // ignora cabeçalho
+
+   let texto = linha.innerText.toLowerCase();
+
+   linha.style.display = texto.includes(termo) ? "" : "none";
+
+});
+
+}
+
+
+
+
+
+
+function atualizarFormaPagamento(){
+
+areaCartao.style.display="none";
+areaDinheiro.style.display="none";
+
+if(formaPagamento.value==="cartao"){
+areaCartao.style.display="block";
+}
+
+if(formaPagamento.value==="dinheiro"){
+areaDinheiro.style.display="block";
+}
+
+calcularParcelas();
+calcularTroco();
+}
+
+
+
+function verificarFormaPagamento(){
+
+let pagamento = formaPagamento.value;
+
+if(pagamento === "cartao"){
+divParcelas.style.display = "block";
+}
+else{
+divParcelas.style.display = "none";
+}
+
+}
+
+
+function calcularTroco(){
+
+let total = parseFloat(document.getElementById("total").innerText) || 0;
+
+// se estiver vazio
+if(valorRecebido.value.trim() === ""){
+troco.value = "R$ 0,00";
+return;
+}
+
+let recebido = parseFloat(valorRecebido.value) || 0;
+
+let trocoCalc = recebido - total;
+
+if(trocoCalc < 0){
+troco.value = "Falta R$ " + Math.abs(trocoCalc).toFixed(2);
+}else{
+troco.value = "R$ " + trocoCalc.toFixed(2);
+}
+
+}
+
+function calcularParcelas(){
+let total=parseFloat(document.getElementById("total").innerText)||0;
+let p=parseInt(parcelas.value)||1;
+let valor=(total/p)||0;
+valorParcela.value="R$ "+valor.toFixed(2);
+}
+
+function preencherParcelas(){
+parcelas.innerHTML="";
+for(let i=1;i<=12;i++){
+parcelas.innerHTML+=`<option value="${i}">${i}x</option>`;
+}
+}
+
+
+
+async function addProduto() {
+
+
+console.log("produtoEditando:", window.produtoEditando);
+
+const nome = pNome.value.trim();
+const codigo = pCodigo.value.trim();
+const custo = Number(pCusto.value);
+const venda = Number(pVenda.value);
+const quantidade = Number(pQtd.value);
+const minimo = Number(pMin.value);
+const unidade = pUnidade.value;
+
+if(!nome || !codigo){
+alert("Preencha nome e código!");
+return;
+}
+
+// ============================
+// 🔥 MODO EDIÇÃO
+// ============================
+if(window.produtoEditando){
+
+   const { error } = await supabaseClient
+   .from("produtos")
+   .update({
+      produto: nome,
+      codigo: codigo,
+      custo: custo,
+      venda: venda,
+      quantidade: quantidade,
+      minimo: minimo,
+      unidade_medida: unidade
+   })
+   .eq("id", window.produtoEditando);
+
+   if(error){
+      console.error(error);
+      alert("Erro ao editar produto");
+      return;
+   }
+
+   alert("Produto atualizado com sucesso!");
+
+   window.produtoEditando = null;
+
+   // 🔥 LIMPA CAMPOS AQUI
+   pNome.value = "";
+   pCodigo.value = "";
+   pVenda.value = "";
+   pCusto.value = "";
+   pQtd.value = "";
+   pMin.value = "";
+   pUnidade.value = "";
+
+   // 🔥 RESTAURA BOTÃO
+   document.getElementById("btnProduto").innerText = "Cadastrar";
+
+   // 🔥 LIBERA O CÓDIGO
+   document.getElementById("pCodigo").disabled = false;
+
+  await carregarProdutos();
+filtrarProdutos();
+return;
+}
+
+// ============================
+// 🔎 VERIFICA SE JÁ EXISTE
+// ============================
+const { data: produtoExistente } = await supabaseClient
+.from("produtos")
+.select("*")
+.eq("codigo", codigo)
+.single();
+
+if (produtoExistente) {
+
+const novaQuantidade = produtoExistente.quantidade + quantidade;
+
+const { error: erroUpdate } = await supabaseClient
+.from("produtos")
+.update({
+quantidade: novaQuantidade,
+custo: custo,
+venda: venda,
+produto: nome
+})
+.eq("codigo", codigo);
+
+if (erroUpdate) {
+console.error(erroUpdate);
+alert("Erro ao atualizar produto");
+return;
+}
+
+alert("Produto atualizado e estoque somado!");
+
+} else {
+
+const { error: erroInsert } = await supabaseClient
+.from("produtos")
+.insert([{
+produto: nome,
+codigo: codigo,
+custo: custo,
+venda: venda,
+quantidade: quantidade,
+minimo: minimo,
+unidade_medida: unidade
+}]);
+
+if (erroInsert) {
+console.error(erroInsert);
+alert("Erro ao salvar produto");
+return;
+}
+
+alert("Produto cadastrado com sucesso!");
+}
+
+// ============================
+// 🔄 LIMPA CAMPOS
+// ============================
+pNome.value = "";
+pCodigo.value = "";
+pVenda.value = "";
+pCusto.value = "";
+pQtd.value = "";
+pMin.value = "";
+pUnidade.value = "";
+
+await carregarProdutos();
+filtrarProdutos();
+}
+
+
+
+async function carregarProdutos() {
+
+const { data, error } = await supabaseClient
+.from("produtos")
+.select("*");
+
+if (error) {
+console.log(error);
+return;
+}
+
+produtos = data; // substitui o array local
+atualizarProdutos();
+atualizarSelect();
+atualizarEstoque();
+}
+
+
+
+
+
+
+function buscarProduto(){
+const termo = buscaProduto.value.toLowerCase().trim();
+
+if(!termo){
+atualizarSelect();
+return;
+}
+
+const indexExato = produtos.findIndex(p => (p.codigo || "").toLowerCase() === termo);
+
+if(indexExato !== -1){
+prod.value = indexExato;
+qtd.focus();
+qtd.select();
+return;
+}
+
+prod.innerHTML="";
+produtos.forEach((p,i)=>{
+if(
+p.produto.toLowerCase().includes(termo) ||
+p.codigo.toLowerCase().includes(termo)
+){
+prod.innerHTML+=`<option value="${i}">${p.produto}</option>`;
+}
+});
+}
+
+function atualizarProdutos(){
+const t = document.getElementById("tProdutos");
+
+t.innerHTML = `
+<tr>
+<th>Nome</th>
+<th>Código</th>
+<th>Venda</th>
+<th>Qtd</th>
+<th>Unidade</th>
+<th>Ação</th>
+</tr>`;
+
+produtos.forEach((p,index)=>{
+
+t.innerHTML += `
+<tr>
+<td>${p.produto}</td>
+<td>${p.codigo ? p.codigo : "-"}</td>
+<td>R$ ${Number(p.venda).toFixed(2)}</td>
+<td>${p.quantidade}</td>
+<td>${p.unidade_medida || "UN"}</td>
+<td>
+<div class="btn-group">
+
+<div class="tooltip">
+  <button class="btn-small btn-edit" data-id="${p.id}">✏️</button>
+  <span class="tooltip-text">Editar Produto</span>
+</div>
+
+<div class="tooltip">
+  <button class="btn-small red" onclick="excluirProduto(${index})">🗑</button>
+  <span class="tooltip-text">Excluir Produto</span>
+</div>
+
+</div>
+</td>
+</tr>`;
+
+});
+
+document.querySelectorAll(".btn-edit").forEach(btn => {
+btn.addEventListener("click", function(){
+const id = this.getAttribute("data-id");
+editarProduto(id);
+});
+});
+
+
+}
+
+
+
+window.editarProduto = function(id){
+
+  console.log("ID recebido:", id);
+
+console.log("SALVANDO - produtoEditando:", window.produtoEditando);
+  
+const p = produtos.find(prod => String(prod.id) === String(id));
+
+if(!p){
+alert("Produto não encontrado");
+return;
+}
+
+  console.log("ACHOU:", p);
+
+  // preenche formulário
+document.getElementById("pNome").value = p.produto;
+document.getElementById("pCodigo").value = p.codigo;
+document.getElementById("pCusto").value = p.custo;
+document.getElementById("pVenda").value = p.venda;
+document.getElementById("pQtd").value = p.quantidade;
+document.getElementById("pMin").value = p.minimo;
+document.getElementById("pUnidade").value = p.unidade_medida || "UN";
+
+  produtoEditando = p.id;
+  // 🔥 ATIVA MODO EDIÇÃO
+  window.produtoEditando = String(p.id);
+
+  console.log("EDITANDO ID:", window.produtoEditando);
+
+  // 🔥 MUDA BOTÃO
+  document.getElementById("btnProduto").innerText = "Salvar";
+
+  // 🔥 BLOQUEIA CÓDIGO
+  document.getElementById("pCodigo").disabled = true;
+
+  // 🔥 MOSTRA CANCELAR (se tiver)
+  const btnCancelar = document.getElementById("btnCancelar");
+  if(btnCancelar) btnCancelar.style.display = "inline-block";
+}
+
+
+async function excluirProduto(index){
+
+if(!confirm("Deseja excluir este produto?")) return;
+
+const produto = produtos[index];
+
+const { error } = await supabaseClient
+.from("produtos")
+.delete()
+.eq("codigo", produto.codigo);
+
+if(error){
+console.error(error);
+alert("Erro ao excluir no banco!");
+return;
+}
+
+alert("Produto excluído com sucesso!");
+
+carregarProdutos(); // 🔥 recarrega direto do Supabase
+}
+
+
+
+function atualizarSelect(){
+prod.innerHTML="";
+produtos.forEach((p,i)=>{
+prod.innerHTML+=`<option value="${i}">${p.produto}</option>`;
+});
+}
+
+function addItem(){
+const index=prod.value;
+let qtdVal;
+
+if(produtos[index].unidade_medida === "UN"){
+qtdVal = parseInt(qtd.value);
+}else{
+qtdVal = parseFloat(qtd.value);
+}
+
+if(produtos[index].quantidade < qtdVal){
+alert("Estoque insuficiente");
+return;
+}
+
+carrinho.push({
+index:index,
+nome:produtos[index].produto,
+codigo:produtos[index].codigo,
+preco:produtos[index].venda,
+qtd:qtdVal
+});
+
+atualizarCarrinho();
+}
+
+function atualizarCarrinho(){
+
+let subtotal = 0;
+
+calcularTroco();
+
+itens.innerHTML="<tr><th>Produto</th><th>Qtd</th><th>Total</th><th>Ação</th></tr>";
+
+carrinho.forEach((item,index)=>{
+
+let sub = item.preco * item.qtd;
+subtotal += sub;
+
+itens.innerHTML+=`<tr>
+<td>${item.nome}</td>
+<td>${item.qtd} ${produtos[item.index].unidade_medida}</td>
+<td>R$ ${sub.toFixed(2)}</td>
+<td>
+<button class="btn-remove" onclick="removerItem(${index})">X</button>
+</td>
+</tr>`;
+});
+
+let valorDesconto = subtotal * (descontoAtual / 100);
+let total = subtotal - valorDesconto;
+
+if(total < 0) total = 0;
+
+// 🔥 atualiza os valores na box nova
+document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+document.getElementById("descontoInfo").innerText = descontoAtual.toFixed(2);
+document.getElementById("total").innerText = total.toFixed(2);
+
+calcularParcelas();
+}
+
+function removerItem(index){
+carrinho.splice(index,1);
+atualizarCarrinho();
+}
+
+function toggleDesconto(){
+areaDesconto.style.display="block";
+}
+
+
+function aplicarDesconto(){
+
+let porcentagem = parseFloat(valorDesconto.value) || 0;
+
+if(porcentagem < 0) porcentagem = 0;
+if(porcentagem > 100) porcentagem = 100;
+
+descontoAtual = porcentagem;
+
+areaDesconto.style.display="none";
+valorDesconto.value="";
+
+atualizarCarrinho();
+}
+
+
+async function finalizarVenda(){
+
+if(carrinho.length === 0){
+alert("Carrinho vazio");
+return;
+}
+
+if(!confirm("Confirmar finalização da venda?")){
+return;
+}
+
+// pegar forma de pagamento corretamente
+let formaPagamento = document.getElementById("formaPagamento").value;
+
+// 1️⃣ Calcular subtotal
+let subtotal = carrinho.reduce((acc, item) => {
+return acc + (item.preco * item.qtd);
+}, 0);
+
+let lucroTotal = 0;
+
+for (let item of carrinho) {
+
+const produto = produtos[item.index];
+
+let custo = Number(produto.custo || produto.pCusto || 0);
+let lucroItem = (item.preco - custo) * item.qtd;
+
+lucroTotal += lucroItem;
+}
+
+lucroTotal = Number(lucroTotal.toFixed(2));
+
+let total = parseFloat(document.getElementById("total").innerText);
+
+let clienteNome = document.getElementById("clienteNome").value || "Consumidor";
+let telefoneCliente = document.getElementById("telefoneCliente")?.value || "";
+
+let valorRecebido = Number(document.getElementById("valorRecebido")?.value || 0);
+
+let troco = 0;
+
+if(formaPagamento === "dinheiro"){
+troco = valorRecebido - total;
+if(troco < 0) troco = 0;
+}
+
+
+// ============================
+// 🔥 SE FOR MARCAR NA CONTA
+// ============================
+
+if(formaPagamento === "conta"){
+
+let cliente = clientes.find(c => c.nome === clienteNome);
+
+if(!cliente){
+alert("Cliente não encontrado!");
+return;
+}
+
+let disponivel = cliente.limite - cliente.saldo;
+
+if(total > disponivel){
+alert(`⚠️ LIMITE INSUFICIENTE!
+Disponível: R$ ${disponivel.toFixed(2)}
+Valor da venda: R$ ${total.toFixed(2)}`);
+return;
+}
+
+// buscar último pedido de conta cliente
+const { data: ultimaConta } = await supabaseClient
+.from("vendas")
+.select("numero_venda")
+.eq("tipo","CONTA_CLIENTE")
+.order("created_at",{ ascending:false })
+.limit(1)
+.maybeSingle();
+
+let numeroConta = "00001";
+
+if(ultimaConta && ultimaConta.numero_venda){
+numeroConta = String(Number(ultimaConta.numero_venda) + 1).padStart(5,"0");
+}
+
+// 🔥 1️⃣ Inserir venda
+const { data: vendaCriada, error: erroVenda } = await supabaseClient
+.from("vendas")
+.insert([{
+numero_venda: numeroConta,
+cliente_id: cliente.id,
+nome_do_cliente: cliente.nome,
+telefone_do_cliente: telefoneCliente,
+forma_pagamento: "conta",
+subtotal: subtotal,
+desconto: descontoAtual,
+total: total,
+lucro: lucroTotal,
+valor_recebido: 0,
+troco: 0,
+parcelas: 1,
+tipo: "CONTA_CLIENTE"
+}])
+.select()
+.single();
+
+if (erroVenda) {
+console.error(erroVenda);
+alert("Erro ao salvar venda na conta!");
+return;
+}
+
+const vendaIdBanco = vendaCriada.id;
+
+
+// 🔥 2️⃣ Inserir itens
+for (let item of carrinho) {
+
+const produto = produtos[item.index];
+
+await supabaseClient
+.from("itens_venda")
+.insert([{
+venda_id: vendaIdBanco,
+produto_id: produto.id,
+quantidade: item.qtd,
+preco_unitario: item.preco
+}]);
+
+await supabaseClient
+.from("produtos")
+.update({
+quantidade: produto.quantidade - item.qtd
+})
+.eq("id", produto.id);
+}
+
+
+// 🔥 3️⃣ Atualizar saldo
+const novoSaldo = cliente.saldo + total;
+const novoDisponivel = cliente.limite - novoSaldo;
+
+await supabaseClient
+.from("clientes")
+.update({
+saldo: novoSaldo,
+disponivel: novoDisponivel
+})
+.eq("id", cliente.id);
+
+cliente.saldo = novoSaldo;
+cliente.disponivel = novoDisponivel;
+
+
+// 🔥 4️⃣ Registrar extrato corretamente
+await supabaseClient
+.from("movimentacoes_clientes")
+.insert([{
+cliente_id: cliente.id,
+data: new Date(),
+descricao: "🛒 Compra",
+valor: total,            // valor real da venda
+tipo: "credito",         // crédito = compra
+saldo_apos: cliente.saldo // saldo real do cliente após a venda
+}]);
+
+
+await carregarClientes();
+await carregarProdutos();
+
+alert("Venda marcada na conta com sucesso!");
+
+carrinho = [];
+descontoAtual = 0;
+
+atualizarCarrinho();
+atualizarClientes();
+limparCamposVenda();
+
+return; // 🔥 impede impressão de cupom
+}
+
+
+
+// ============================
+// 🔥 VENDA NORMAL
+// ============================
+
+
+// buscar último pedido de venda normal
+const { data: ultimaVenda } = await supabaseClient
+.from("vendas")
+.select("numero_venda")
+.eq("tipo","VENDA")
+.order("numero_venda",{ ascending:false })
+.limit(1)
+.single();
+
+let numeroPedido = "00001";
+
+if(ultimaVenda){
+numeroPedido = String(Number(ultimaVenda.numero_venda)+1).padStart(5,"0");
+}
+
+
+let clienteSelecionado = clientes.find(
+c => c.nome.toLowerCase() === clienteNome.toLowerCase()
+);
+
+const { data: vendaCriada, error: erroVenda } = await supabaseClient
+.from("vendas")
+.insert([{
+numero_venda: numeroPedido,
+cliente_id: clienteSelecionado ? clienteSelecionado.id : null,
+nome_do_cliente: clienteNome,
+telefone_do_cliente: telefoneCliente,
+forma_pagamento: formaPagamento,
+subtotal: subtotal,
+desconto: descontoAtual,
+total: total,
+lucro: lucroTotal,
+valor_recebido: valorRecebido,
+troco: troco,
+parcelas: formaPagamento === "cartao"
+? Number(parcelas.value) || 1
+: 1,
+tipo: "VENDA"
+}])
+.select()
+.single();
+
+if (erroVenda) {
+console.error(erroVenda);
+alert("Erro ao salvar venda!");
+return;
+}
+
+const vendaIdBanco = vendaCriada.id;
+
+
+// inserir itens
+for (let item of carrinho) {
+
+const produto = produtos[item.index];
+
+const { error: erroItem } = await supabaseClient
+.from("itens_venda")
+.insert([{
+venda_id: vendaIdBanco,
+produto_id: produto.id,
+quantidade: item.qtd,
+preco_unitario: item.preco
+}]);
+
+if (erroItem) {
+console.error(erroItem);
+alert("Erro ao salvar item da venda!");
+return;
+}
+
+await supabaseClient
+.from("produtos")
+.update({
+quantidade: produto.quantidade - item.qtd
+})
+.eq("id", produto.id);
+}
+
+
+// atualizar estoque
+await carregarProdutos();
+atualizarProdutos();
+
+vendaCriada.valorRecebido = valorRecebido;
+vendaCriada.troco = troco;
+
+
+// imprimir cupom
+if(formaPagamento !== "conta"){
+imprimirCupom(total,"VENDA", vendaCriada);
+}
+
+alert("Venda finalizada com sucesso!");
+
+
+carrinho = [];
+descontoAtual = 0;
+
+atualizarCarrinho();
+atualizarClientes();
+limparCamposVenda(); 
+atualizarDashboard();
+
+await carregarHistoricoDoBanco();
+await carregarClientes();
+
+}
+
+
+
+function limparCamposVenda(){
+
+let nome = document.getElementById("clienteNome");
+if(nome) nome.value = "";
+
+let telefone = document.getElementById("telefoneCliente");
+if(telefone) telefone.value = "";
+
+let pagamento = document.getElementById("formaPagamento");
+if(pagamento) pagamento.value = "";
+
+let valorRecebido = document.getElementById("valorRecebido");
+if(valorRecebido) valorRecebido.value = "";
+
+let troco = document.getElementById("troco");
+if(troco) troco.value = "";
+
+let parcelas = document.getElementById("parcelas");
+if(parcelas) parcelas.value = 1;
+
+let codigo = document.getElementById("codigoProduto");
+if(codigo) codigo.focus();
+
+}
+
+
+
+
+
+
+function imprimirCupom(total, tipo="VENDA", dadosVenda=null){
+
+let largura = 302;
+let w = window.open("", "", `width=${largura},height=600`);
+
+let pagamento = dadosVenda
+? (dadosVenda.forma_pagamento || dadosVenda.pagamento)
+: formaPagamento.value;
+let parc = Number(dadosVenda ? dadosVenda.parcelas : parcelas.value) || 1;
+let itens = [];
+
+if(dadosVenda && dadosVenda.itens){
+
+itens = dadosVenda.itens.map(i => ({
+nome: i.produtos?.produto || i.nome || produtos.find(p => p.id === i.produto_id)?.produto || "Produto",
+codigo: i.produtos?.codigo || i.codigo || produtos.find(p => p.id === i.produto_id)?.codigo || "-",
+preco: Number(i.preco_unitario ?? i.preco ?? 0),
+qtd: Number(i.quantidade ?? i.qtd ?? 1),
+unidade: i.unidade || i.produtos?.unidade_medida || produtos.find(p => p.id === i.produto_id)?.unidade_medida || "UN"
+}));
+
+}else{
+
+itens = carrinho.map(i => ({
+nome: i.nome,
+codigo: i.codigo,
+preco: i.preco,
+qtd: i.qtd,
+unidade: produtos[i.index]?.unidade_medida || "UN"
+}));
+
+}
+
+let cliente = dadosVenda
+? (dadosVenda.nome_do_cliente || dadosVenda.cliente || dadosVenda.nome_cliente)
+: clienteNome.value;
+
+let numeroVenda = dadosVenda
+? (dadosVenda.pedido || dadosVenda.numero || dadosVenda.numero_venda || dadosVenda.id)
+: "";
+
+let numeroFormatado = numeroVenda
+? "PEDIDO-" + String(numeroVenda).padStart(4, "0")
+: "-";
+
+let desconto = dadosVenda ? dadosVenda.desconto : descontoAtual;
+desconto = Number(desconto || 0);
+
+let valorRec = dadosVenda
+? (dadosVenda.valorRecebido || dadosVenda.valor_recebido || 0)
+: Number(document.getElementById("valorRecebido")?.value || 0);
+
+let valorTroco = dadosVenda
+? (dadosVenda.troco || 0)
+: Number(document.getElementById("troco")?.value || 0);
+
+valorRec = Number(valorRec || 0);
+valorTroco = Number(valorTroco || 0);
+
+let dataVenda = dadosVenda
+? new Date(dadosVenda.created_at || dadosVenda.data).toLocaleString("pt-BR")
+: new Date().toLocaleString("pt-BR");
+
+let html = `
+<html>
+<head>
+<style>
+body{
+font-family: monospace;
+width:280px;
+margin:0;
+padding:10px;
+font-size:12px;
+}
+
+.center{
+text-align:center;
+}
+
+.titulo{
+font-size:15px;
+font-weight:bold;
+}
+
+.total{
+font-size:16px;
+font-weight:bold;
+}
+
+.linha{
+display:flex;
+justify-content:space-between;
+}
+
+hr{
+border:none;
+border-top:1px dashed #000;
+margin:6px 0;
+}
+
+table{
+width:100%;
+font-size:12px;
+border-collapse:collapse;
+table-layout:fixed;
+}
+
+td{
+padding:2px 0;
+vertical-align:top;
+word-break:break-word;
+}
+
+td:nth-child(1){ width:55px; }
+td:nth-child(2){ width:155px; }
+td:nth-child(3){ width:60px; text-align:right; }
+
+small{
+font-size:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="center">
+<div class="titulo">${tipo}</div>
+<strong>${config.nome || "JB SANTOS"}</strong><br>
+CNPJ: ${config.cnpj || ""}<br>
+${config.endereco || ""}<br>
+${config.telefone || ""}<br>
+<br>
+<strong>******** CUPOM NÃO FISCAL ********</strong>
+</div>
+
+<hr>
+
+<div class="linha">
+<span><strong>${numeroFormatado}</strong></span>
+<span>${dataVenda}</span>
+</div>
+
+Cliente: ${cliente || "Consumidor"}<br>
+
+<hr>
+
+<table>
+<tr>
+<td><strong>Cod</strong></td>
+<td><strong>Produto</strong></td>
+<td><strong>Total</strong></td>
+</tr>
+`;
+
+itens.forEach(i=>{
+let sub = i.preco * i.qtd;
+
+html += `
+<tr>
+<td>${i.codigo || "-"}</td>
+<td>
+${i.nome}<br>
+<span style="padding-left:10px;">${i.qtd} ${i.unidade || "UN"} x ${i.preco.toFixed(2)}</span>
+</td>
+<td>${sub.toFixed(2)}</td>
+</tr>
+`;
+});
+
+html += `
+</table>
+
+<hr>
+
+<div class="linha">
+<span>Desconto:</span>
+<span>R$ ${desconto.toFixed(2)}</span>
+</div>
+
+<div class="linha total">
+<span>TOTAL:</span>
+<span>R$ ${total.toFixed(2)}</span>
+</div>
+
+<hr>
+
+${pagamento==="dinheiro" ? `
+<div class="linha">
+<span>Valor Recebido:</span>
+<span>R$ ${Number(valorRec).toFixed(2)}</span>
+</div>
+<div class="linha">
+<span>Troco:</span>
+<span>R$ ${Number(valorTroco).toFixed(2)}</span>
+</div>
+<hr>
+` : ""}
+
+${pagamento === "cartao" ? `
+<div class="linha">
+<span>Parcelas:</span>
+<span>${(parc || 1)}x</span>
+</div>
+<div class="linha">
+<span>Valor Parcela:</span>
+<span>R$ ${(Number(total) / (parc || 1)).toFixed(2)}</span>
+</div>
+<hr>
+` : ""}
+
+<div class="linha">
+<span>Forma Pagamento:</span>
+<span>${
+pagamento === "dinheiro" ? "Dinheiro" :
+pagamento === "debito" ? "Cartão Débito" :
+pagamento === "cartao" ? "Cartão Crédito" :
+pagamento === "pix" ? "Pix" : pagamento
+}</span>
+</div>
+
+<br>
+
+<div class="center">
+Obrigado pela preferência
+<br><br>
+<small>Sistema JB Santos</small>
+</div>
+
+</body>
+</html>
+`;
+
+w.document.write(html);
+w.document.close();
+w.print();
+}
+
+
+function reimprimirCupom(index){
+
+let venda = vendas[index];
+
+if(!venda){
+alert("Venda não encontrada");
+return;
+}
+
+imprimirCupom(venda.total, "REIMPRESSÃO", venda);
+
+}
+
+
+function reimprimirOrcamento(id){
+
+let orc = vendas.find(v => String(v.id) === String(id));
+
+if(!orc){
+alert("Orçamento não encontrado");
+return;
+}
+
+imprimirOrcamentoA4(orc);
+
+}
+
+
+function obterNumeroOrcamento(){
+let numero = localStorage.getItem("orcamentoJB") || 1;
+localStorage.setItem("orcamentoJB", parseInt(numero)+1);
+return numero;
+}
+
+
+async function gerarOrcamento(){
+
+console.log("orcamentoEmEdicaoId:", orcamentoEmEdicaoId);
+console.log("Carrinho:", carrinho);
+
+if(carrinho.length === 0){
+alert("Carrinho vazio");
+return;
+}
+
+if(!confirm("Gerar orçamento?")) return;
+
+let total = parseFloat(document.getElementById("total").innerText) || 0;
+let subtotal = parseFloat(document.getElementById("subtotal").innerText);
+let cliente = clienteNome.value || "Consumidor";
+let telefoneCliente = document.getElementById("telefoneCliente")?.value || "";
+
+console.log("Telefone digitado:", telefoneCliente);
+
+let pagamento = document.getElementById("formaPagamento")?.value || "Não informado";
+
+let parcelas = document.getElementById("parcelas");
+
+let qtdParcelas = Number(parcelas?.value) || 1;
+
+console.log("Parcelas enviadas:", qtdParcelas);
+console.log("Valor da parcela:", total / qtdParcelas);
+
+if(pagamento === "cartao"){
+qtdParcelas = Number(parcelas.value) || 1;
+
+if(isNaN(qtdParcelas) || qtdParcelas <= 0){
+qtdParcelas = 1;
+}
+}
+
+console.log("Valor do select parcelas:", Number(parcelas.value));
+console.log("Parcelas escolhidas:", qtdParcelas);
+console.log("Valor da parcela:", total / qtdParcelas);
+
+let valorParc = pagamento === "cartao"
+? (total / qtdParcelas)
+: total;
+
+let orcamentoId;
+let numero;
+let numeroFormatado;
+
+// ===============================
+// 🔥 SE ESTIVER EDITANDO
+// ===============================
+if(orcamentoEmEdicaoId){
+
+const { data, error } = await supabaseClient
+.from("vendas")
+.select("*")
+.eq("id", orcamentoEmEdicaoId)
+.single();
+
+if(error){
+console.error(error);
+alert("Erro ao buscar orçamento!");
+return;
+}
+
+if(!data){
+alert("Orçamento não encontrado!");
+return;
+}
+
+numero = data.numero_orcamento;
+numeroFormatado = "ORC-" + String(numero).padStart(4,"0");
+orcamentoId = data.id;
+
+
+// 🔥 Atualiza o orçamento
+const { error: erroUpdate } = await supabaseClient
+.from("vendas")
+.update({
+nome_do_cliente: cliente,
+telefone_do_cliente: telefoneCliente, 
+forma_pagamento: pagamento,
+subtotal: subtotal,
+desconto: descontoAtual,
+total: total,
+parcelas: pagamento === "cartao"
+? Number(parcelas.value) || 1
+: 1,
+valor_parcela: pagamento === "cartao"
+? total / (Number(parcelas.value) || 1)
+: null,
+})
+.eq("id", orcamentoId);
+
+if(erroUpdate){
+console.error(erroUpdate);
+alert("Erro ao atualizar orçamento!");
+return;
+}
+
+// 🔥 apagar itens antigos
+await supabaseClient
+.from("itens_venda")
+.delete()
+.eq("venda_id", orcamentoId);
+
+alert("Orçamento atualizado com sucesso!");
+}
+// ===============================
+// 🔥 NOVO ORÇAMENTO
+// ===============================
+else {
+
+console.log("Pagamento:", pagamento);
+console.log("Parcelas enviadas:", qtdParcelas);
+console.log("Valor do select:", parcelas.value);
+
+const { data, error } = await supabaseClient
+.from("vendas")
+.insert([{
+cliente_id: null,
+nome_do_cliente: cliente,
+telefone_do_cliente: telefoneCliente,
+forma_pagamento: pagamento,
+subtotal: subtotal,
+desconto: descontoAtual,
+total: total,
+parcelas: pagamento === "cartao" ? qtdParcelas : 1,
+valor_parcela: pagamento === "cartao" ? total / qtdParcelas : null,
+tipo: "ORCAMENTO",
+numero_venda: null
+}])
+.select()
+.single();
+
+if(error){
+console.error(error);
+alert("Erro ao salvar orçamento!");
+return;
+}
+
+numero = data.numero_orcamento;
+numeroFormatado = "ORC-" + String(numero).padStart(4,"0");
+orcamentoId = data.id;
+
+alert("Orçamento salvo com sucesso! Nº " + numeroFormatado);
+}
+
+// ===============================
+// 🔥 INSERE ITENS
+// ===============================
+for(let item of carrinho){
+
+const produto = produtos[item.index];
+
+await supabaseClient
+.from("itens_venda")
+.insert([{
+venda_id: orcamentoId,
+produto_id: produto.id,
+quantidade: item.qtd,
+preco_unitario: item.preco
+}]);
+}
+
+await carregarHistoricoDoBanco();
+
+// ===============================
+// 🔥 IMPRESSÃO
+// ===============================
+let orcamentoTemp = {
+numero: numeroFormatado,
+data: new Date().toLocaleDateString(),
+total: total,
+tipo: "ORCAMENTO",
+cliente: cliente,
+telefone: telefoneCliente,
+pagamento: pagamento,
+desconto: descontoAtual,
+subtotal: subtotal,
+parcelas: qtdParcelas,
+valorParcela: valorParc,
+itens: carrinho.map(item => ({
+nome: produtos[item.index].produto,
+qtd: item.qtd,
+preco: item.preco,
+unidade: produtos[item.index].unidade_medida || "UN"
+}))
+};
+
+
+imprimirOrcamentoA4(orcamentoTemp);
+
+alert("Orçamento gerado com sucesso!");
+
+orcamentoEmEdicaoId = null;
+carrinho = [];
+
+atualizarCarrinho();
+atualizarClientes();
+limparCamposVenda();
+}
+
+
+
+async function imprimirOrcamentoA4(orc){
+
+const { data: empresa } = await supabaseClient
+.from("empresa")
+.select("*")
+.limit(1)
+.single();
+
+const emp = empresa || {};
+console.log("EMPRESA:", emp);
+let dataBase = orc.data || orc.created_at || orc.data_venda || Date.now();
+
+let dataOrc = new Date(dataBase);
+
+if (isNaN(dataOrc)) {
+dataOrc = new Date();
+}
+
+dataOrc = dataOrc.toLocaleDateString("pt-BR");
+
+
+
+
+let cliente =
+orc.cliente ||
+orc.nome_do_cliente ||
+"Consumidor";
+
+
+let telefone =
+orc.telefone ||
+orc.telefone_do_cliente ||
+"";
+
+
+let pagamento =
+orc.pagamento ||
+orc.forma_pagamento ||
+"Não informado";
+
+let numeroBase = orc.numero || orc.numero_orcamento || orc.id || 1;
+let numeroFormatado = String(numeroBase).replace("ORC-","");
+numeroFormatado = numeroFormatado.padStart(4,'0');
+
+let w = window.open("", "", "width=900,height=700");
+
+let html = `
+<html>
+<head>
+<title>Orçamento</title>
+
+<style>
+@media print {
+*{
+-webkit-print-color-adjust: exact !important;
+print-color-adjust: exact !important;
+}
+}
+@page{ size:A4; margin:15mm; }
+
+body{font-family:Arial;margin:0}
+
+.topo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.logo{height:70px}
+
+.titulo{text-align:right;}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#000;
+color:#fff;
+padding:8px;
+border:1px solid #000;
+text-align:center;
+}
+
+td{
+border:1px solid #000;
+padding:8px;
+text-align:center;
+}
+
+td:nth-child(2){
+text-align:center;
+}
+
+.info{
+border:1px solid #000;
+padding:10px;
+margin-top:10px;
+}
+
+.footer{
+display:flex;
+margin-top:15px;
+}
+
+.pagamento{
+flex:1;
+border:1px solid #000;
+padding:10px;
+min-height:70px;
+}
+
+.total{
+width:250px;
+border:1px solid #000;
+margin-left:10px;
+padding:10px;
+}
+
+.totalFinal{
+font-size:22px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+
+<div style="width:120px;">
+<img src="logojb.png" class="logo">
+</div>
+
+<div style="flex:1;text-align:center;font-size:14px;">
+<b style="font-size:18px;">${emp.nome || ""}</b><br>
+${emp.endereco || ""}<br>
+Tel: ${emp.telefone || ""}<br>
+${emp.email ? `Email: ${emp.email}` : ""}
+</div>
+
+<div style="width:200px;text-align:right;">
+
+<div style="font-size:22px;font-weight:bold;">
+ORÇAMENTO
+</div>
+
+<div style="font-size:14px;margin-top:5px;">
+<b>Nº:</b> ORC-${numeroFormatado}
+</div>
+
+<div style="font-size:14px;">
+<b>Data:</b> ${dataOrc}
+</div>
+
+<div style="font-size:14px;">
+<b>Hora:</b> ${new Date().toLocaleTimeString()}
+</div>
+
+<div style="font-size:14px;">
+<b>Validade:</b> 7 dias
+</div>
+
+</div>
+
+</div>
+
+
+<div class="info">
+<b>Cliente:</b> ${cliente}<br>
+${telefone ? `<b>Telefone:</b> ${telefone}` : ""}
+</div>
+
+<table>
+<tr>
+<th>Item</th>
+<th>Descrição</th>
+<th>Valor</th>
+<th>Qtd</th>
+<th>Total</th>
+</tr>
+`;
+
+
+
+let subtotal = Number(orc.subtotal || 0);
+let desconto = Number(orc.desconto || 0);
+let total = Number(orc.total || 0);
+
+orc.itens.forEach((i,index)=>{
+
+let nomeProduto = i.nome || i.descricao || "Produto";
+let sub = i.preco * i.qtd;
+
+let unidadeItem = i.unidade || produtos.find(p => p.produto === nomeProduto)?.unidade_medida || "UN";
+
+html += `
+<tr>
+<td>${index+1}</td>
+<td>${nomeProduto}</td>
+<td>R$ ${i.preco.toFixed(2)}</td>
+<td>${i.qtd} ${unidadeItem}</td>
+<td>R$ ${sub.toFixed(2)}</td>
+</tr>`;
+});
+
+html += `
+</table>
+
+<div class="footer">
+
+<div class="pagamento">
+<b>Forma de pagamento:</b> ${pagamento}<br>
+${pagamento === "cartao" ? `
+<b>Parcelas:</b> ${(orc.parcelas || orc.qtd_parcelas || 1)}x<br>
+<b>Valor por parcela:</b> R$ ${(Number(orc.valorParcela || orc.valor_parcela) || (total/((orc.parcelas || orc.qtd_parcelas)||1))).toFixed(2)}
+` : ""}
+</div>
+
+<div class="total">
+Subtotal: R$ ${subtotal.toFixed(2)}<br>
+Desconto: ${desconto.toFixed(2)}%
+<hr>
+<div class="totalFinal">
+Total: R$ ${total.toFixed(2)}
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
+`;
+
+w.document.write(html);
+w.document.close();
+w.onload = function(){
+w.print();
+}
+}
+
+
+
+
+let tEstoque;
+
+
+
+function atualizarEstoque(){
+
+const tabela = document.getElementById("tEstoque");
+const pesquisa = document.getElementById("pesquisaEstoque").value.toLowerCase();
+
+if(!tabela) return;
+
+// FILTRAR PRODUTOS
+let filtrados = produtos.filter(p => 
+(p.codigo || "").toLowerCase().includes(pesquisa) ||
+(p.produto || "").toLowerCase().includes(pesquisa)
+);
+
+// CALCULAR RESUMO DO ESTOQUE
+let totalItens = 0;
+let valorTotal = 0;
+
+filtrados.forEach(p => {
+
+let qtd = Number(p.quantidade || 0);
+let custo = Number(p.custo || p.pCusto || 0);
+
+totalItens += qtd;
+valorTotal += qtd * custo;
+
+});
+
+document.getElementById("totalItensEstoque").innerText = totalItens;
+
+document.getElementById("valorEstoque").innerText =
+"R$ " + valorTotal.toFixed(2);
+
+
+// MONTAR TABELA
+tabela.innerHTML = `
+<tr>
+<th>Código</th>
+<th>Produto</th>
+<th>Qtd</th>
+<th>Unidade</th>
+<th>Status</th>
+<th>Alarme</th>
+<th>Ação</th>
+</tr>
+`;
+
+filtrados.forEach(p=>{
+
+let baixo = Number(p.quantidade) <= Number(p.minimo);
+
+let status = baixo ? "BAIXO" : "OK";
+
+let cor = baixo ? "#c62828" : "#1fa84f";
+
+let bolinha = baixo
+? `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#c62828;"></span>`
+: `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#1fa84f;"></span>`;
+
+tabela.innerHTML += `
+<tr>
+<td>${p.codigo ? p.codigo : "-"}</td>
+<td style="text-align:left;">${p.produto}</td>
+<td>${p.quantidade}</td>
+<td>${p.unidade_medida || "UN"}</td>
+<td style="color:${cor};font-weight:bold;">${status}</td>
+<td>${bolinha}</td>
+<td>
+  <button class="btn-small" onclick="abrirModalEstoque('${p.id}')">✏️</button>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+
+
+
+   let produtoEstoqueEditando = null;
+
+function abrirModalEstoque(id){
+
+  const p = produtos.find(prod => String(prod.id) === String(id));
+
+  if(!p){
+    alert("Produto não encontrado");
+    return;
+  }
+
+  produtoEstoqueEditando = p.id;
+
+  // preenche dados
+  mNome.innerText = p.produto;
+  mCodigo.innerText = p.codigo;
+  mCusto.innerText = Number(p.custo).toFixed(2);
+  mVenda.innerText = Number(p.venda).toFixed(2);
+
+  mQtd.value = p.quantidade;
+  mMin.value = p.minimo;
+
+  document.getElementById("modalEstoque").style.display = "flex";
+}
+
+
+
+ async function salvarEstoque(){
+
+  if(!produtoEstoqueEditando) return;
+
+  const novaQtd = Number(mQtd.value);
+  const novoMin = Number(mMin.value);
+
+  const { error } = await supabaseClient
+  .from("produtos")
+  .update({
+    quantidade: novaQtd,
+    minimo: novoMin
+  })
+  .eq("id", produtoEstoqueEditando);
+
+  if(error){
+    console.error(error);
+    alert("Erro ao atualizar estoque");
+    return;
+  }
+
+  alert("Estoque atualizado!");
+
+  fecharModalEstoque();
+  carregarProdutos();
+}
+   
+
+
+     function fecharModalEstoque(){
+  document.getElementById("modalEstoque").style.display = "none";
+  produtoEstoqueEditando = null;
+}
+
+   
+
+function filtrarEstoque(){
+atualizarEstoque();
+}
+
+
+async function carregarHistoricoDoBanco(){
+
+const { data, error } = await supabaseClient
+.from("vendas")
+.select(`
+   *,
+  itens_venda (
+ quantidade,
+ preco_unitario,
+ produto_id,
+ produtos (
+   produto
+ )
+)
+ `)
+.order("id", { ascending: false });
+
+if(error){
+console.error(error);
+alert("Erro ao carregar histórico");
+return;
+}
+
+vendas = data.map(v => ({
+
+id: v.id,
+pagamento_id: v.pagamento_id,
+numero_venda: v.numero_venda,
+numero_orcamento: v.numero_orcamento,
+
+created_at: v.created_at, // importante
+
+total: v.total,
+lucro: v.lucro || 0,
+tipo: v.tipo || "VENDA",
+
+nome_do_cliente: v.nome_do_cliente || "Consumidor",
+telefone_do_cliente: v.telefone_do_cliente || "",
+
+forma_pagamento: v.forma_pagamento,
+
+parcelas: v.parcelas || 1,
+valor_parcela: v.valor_parcela || v.total,
+
+desconto: v.desconto || 0,
+subtotal: v.subtotal || 0,
+
+itens: v.itens_venda.map(item => ({
+produto_id: item.produto_id,
+nome: item.produtos?.produto || "",
+qtd: item.quantidade,
+preco: item.preco_unitario
+}))
+
+}));
+
+atualizarHistorico();
+
+atualizarDashboard();
+}
+
+
+
+function atualizarHistorico(){
+
+tHistorico.innerHTML=`
+<tr>
+<th>Data</th>
+<th>Tipo</th>
+<th>Cliente</th>
+<th>Valor</th>
+<th>Lucro</th>
+<th>Ações</th>
+</tr>`;
+
+[...vendas]
+.sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
+.forEach((v,index)=>{
+
+let cor = "#000";
+let valorFormatado = v.total.toFixed(2);
+
+// cores por tipo
+if(v.tipo === "PAGAMENTO_CONTA"){
+cor = "#1fa84f";
+valorFormatado = "- R$ " + valorFormatado;
+}
+
+else if(v.tipo === "CONTA_CLIENTE"){
+cor = "#e67e22";
+valorFormatado = "R$ " + valorFormatado;
+}
+
+else if(v.tipo === "ORCAMENTO"){
+cor = "#2d7ff9";
+valorFormatado = "R$ " + valorFormatado;
+}
+
+else{
+valorFormatado = "R$ " + valorFormatado;
+}
+
+// nome + icone do tipo
+let tipoFormatado =
+v.tipo === "VENDA" ? "🧾 Venda" :
+v.tipo === "ORCAMENTO" ? "📄 Orçamento" :
+v.tipo === "CONTA_CLIENTE" ? "📒 Conta Cliente" :
+v.tipo === "PAGAMENTO_CONTA" ? "💰 Pagamento Conta" :
+v.tipo;
+
+tHistorico.innerHTML+=`
+<tr>
+<td>${new Date(v.created_at).toLocaleString("pt-BR")}</td>
+<td>${tipoFormatado}</td>
+<td>${v.nome_do_cliente || "Consumidor"}</td>
+
+<td style="color:${cor}; font-weight:bold;">
+${valorFormatado}
+</td>
+
+<td style="color:green; font-weight:bold;">
+${v.tipo === "VENDA" || v.tipo === "CONTA_CLIENTE"
+ ? "R$ " + Number(v.lucro || 0).toFixed(2)
+ : "-"
+}
+</td>
+
+<td>
+<div class="btn-group">
+
+${v.tipo === "VENDA" ? `
+<div class="tooltip">
+<button class="btn-small" onclick="reimprimirVenda('${v.id}')">🖨</button>
+<span class="tooltip-text">Reimprimir Venda</span>
+</div>
+` : ""}
+
+${v.tipo === "ORCAMENTO" ? `
+<div class="tooltip">
+<button class="btn-small" onclick="reimprimirOrcamento('${v.id}')">🖨</button>
+<span class="tooltip-text">Reimprimir Orçamento</span>
+</div>
+` : ""}
+
+${v.tipo === "ORCAMENTO" ? `
+<div class="tooltip">
+<button class="btn-small" onclick="converterOrcamento('${v.id}')">💰</button>
+<span class="tooltip-text">Converter Orçamento</span>
+</div>
+` : ""}
+
+${v.tipo === "CONTA_CLIENTE" ? `
+<div class="tooltip">
+<button class="btn-small" onclick="reimprimirVenda('${v.id}')">🖨</button>
+<span class="tooltip-text">Reimprimir Venda</span>
+</div>
+` : ""}
+
+${v.tipo === "PAGAMENTO_CONTA" ? `
+<div class="tooltip">
+<button class="btn-small" onclick="reimprimirComprovantePagamento('${v.pagamento_id}')">🧾</button>
+<span class="tooltip-text">Reimprimir Comprovante</span>
+</div>
+` : ""}
+
+<div class="tooltip">
+<button class="btn-small red" onclick="excluirVenda('${v.id}')">🗑</button>
+<span class="tooltip-text">Excluir</span>
+</div>
+
+</div>
+</td>
+</tr>`;
+});
+
+}
+
+
+
+
+function filtrarHistorico(){
+
+let termo = document.getElementById("pesquisaHistorico").value.toLowerCase();
+
+let linhas = document.querySelectorAll("#tHistorico tr");
+
+linhas.forEach((linha,index)=>{
+
+if(index === 0) return; // ignora cabeçalho
+
+let texto = linha.innerText.toLowerCase();
+
+linha.style.display = texto.includes(termo) ? "" : "none";
+
+});
+
+}
+
+
+
+
+async function excluirVenda(id){
+
+if(!confirm("Deseja realmente excluir esta venda?")) return;
+
+const { error: erroItens } = await supabaseClient
+.from("itens_venda")
+.delete()
+.eq("venda_id", id);
+
+if(erroItens){
+console.error(erroItens);
+alert("Erro ao excluir itens da venda");
+return;
+}
+
+const { error: erroVenda } = await supabaseClient
+.from("vendas")
+.delete()
+.eq("id", id);
+
+if(erroVenda){
+console.error(erroVenda);
+alert("Erro ao excluir venda");
+return;
+}
+
+alert("Venda excluída com sucesso!");
+
+carregarHistoricoDoBanco();
+}
+
+
+window.salvarConfig = async function() {
+const dados = {
+nome: confNome.value,
+cnpj: confCnpj.value,
+endereco: confEndereco.value,
+telefone: confTelefone.value,
+email: confEmail.value
+};
+
+const { data: empresaExistente, error: err1 } = await supabaseClient
+.from("empresa")
+.select("*")
+.limit(1)
+.maybeSingle();
+
+if (err1) { console.error(err1); alert("Erro ao buscar empresa"); return; }
+
+if (empresaExistente) {
+const { error } = await supabaseClient
+.from("empresa")
+.update(dados)
+.eq("id", empresaExistente.id);
+if (error) { console.error(error); alert("Erro ao atualizar configuração"); return; }
+} else {
+const { error } = await supabaseClient
+.from("empresa")
+.insert([dados]);
+if (error) { console.error(error); alert("Erro ao salvar configuração"); return; }
+}
+
+alert("Configuração salva no banco com sucesso!");
+}
+
+
+
+
+async function buscarOuCriarCliente(nome){
+
+if(!nome || nome.trim()===""){
+alert("Digite o nome do cliente");
+return null;
+}
+
+// 🔎 Buscar no banco primeiro
+const { data: existente, error: erroBusca } = await supabaseClient
+.from("clientes")
+.select("*")
+.ilike("nome", nome)
+.maybeSingle();
+
+if(erroBusca){
+console.error(erroBusca);
+alert("Erro ao buscar cliente");
+return null;
+}
+
+if(existente){
+return existente;
+}
+
+// 🔥 Criar cliente no banco
+const { data: novoCliente, error: erroInsert } = await supabaseClient
+.from("clientes")
+.insert([{
+nome: nome,
+limite: 500,
+saldo: 0
+}])
+.select()
+.single();
+
+if(erroInsert){
+console.error(erroInsert);
+alert("Erro ao criar cliente");
+return null;
+}
+
+return novoCliente;
+}
+
+
+
+async function verExtrato(clienteId){
+
+const cliente = clientes.find(c => c.id == clienteId);
+if(!cliente){
+alert("Cliente não encontrado");
+return;
+}
+
+// 🔹 BUSCAR TODAS AS MOVIMENTAÇÕES DO CLIENTE
+const { data: movimentacoes, error: erroMov } = await supabaseClient
+.from("movimentacoes_clientes")
+.select("*")
+.eq("cliente_id", clienteId)
+.order("data", { ascending: true });
+
+if(erroMov){
+console.error(erroMov);
+alert("Erro ao buscar movimentações do cliente");
+return;
+}
+
+// 🔹 MONTAR EXTRATO
+let html = "";
+
+movimentacoes.forEach(item => {
+
+// 🔹 DEFINE VALOR DA LINHA
+// Valor positivo = compra (crédito), Valor negativo = pagamento (débito)
+const valorLinha = item.tipo === "credito" ? Number(item.valor) : -Number(item.valor);
+
+// 🔹 DEFINE COR DO VALOR
+let cor = valorLinha > 0 ? "#c62828" : "#1fa84f";
+
+// 🔹 COR DE FUNDO LEVE
+let bgCor = valorLinha > 0 ? "rgba(198,40,40,0.05)" : "rgba(31,168,79,0.05)";
+
+// 🔹 ÍCONE E DESCRIÇÃO
+let descricaoFormatada = valorLinha > 0 ? "🛒 Compra" : "💰 Pagamento";
+
+html += `
+     <tr style="background-color: ${bgCor};">
+       <td style="padding:8px;">
+         ${new Date(item.data).toLocaleString()}
+       </td>
+
+       <td style="padding:8px; font-weight:bold;">
+         ${descricaoFormatada}
+       </td>
+
+       <td style="padding:8px; color:${cor}; font-weight:bold;">
+         R$ ${valorLinha.toFixed(2)}
+       </td>
+
+       <td style="padding:8px; font-weight:bold;">
+         R$ ${Number(item.saldo_apos).toFixed(2)}
+       </td>
+     </tr>
+   `;
+});
+
+document.getElementById("extratoNome").innerText = cliente.nome;
+const saldoFinal = movimentacoes.length ? movimentacoes[movimentacoes.length - 1].saldo_apos : 0;
+document.getElementById("extratoSaldo").innerText = "R$ " + saldoFinal.toFixed(2);
+document.getElementById("extratoTabela").innerHTML = html;
+
+document.getElementById("modalExtrato").style.display = "flex";
+}
+
+
+function fecharExtrato(){
+document.getElementById("modalExtrato").style.display = "none";
+}
+
+
+
+async function cadastrarCliente(){
+
+let nome = cNome.value.trim();
+let telefone = cTelefone.value.trim();
+let limite = parseFloat(cLimite.value) || 500;
+
+if(!nome){
+  alert("Digite o nome do cliente");
+  return;
+}
+
+// 🔥 MODO EDIÇÃO
+if(clienteEditando){
+
+  const { error } = await supabaseClient
+  .from("clientes")
+  .update({
+    nome: nome,
+    telefone: telefone,
+    limite: limite
+  })
+  .eq("id", clienteEditando);
+
+  if(error){
+    console.error(error);
+    alert("Erro ao atualizar cliente");
+    return;
+  }
+
+  alert("Cliente atualizado com sucesso!");
+
+  clienteEditando = null;
+
+} else {
+
+  // 🔥 CADASTRO NORMAL (SEU CÓDIGO ORIGINAL)
+  const { data, error } = await supabaseClient
+  .from("clientes")
+  .insert([{
+    nome: nome,
+    telefone: telefone,
+    limite: limite
+  }])
+  .select();
+
+  console.log("ID INSERIDO:", data?.[0]?.id);
+  console.log("ERROR:", error);
+
+  if(error){
+    console.error(error);
+    alert("Erro ao cadastrar cliente");
+    return;
+  }
+
+  alert("Cliente cadastrado com sucesso!");
+}
+
+// 🔥 LIMPAR FORMULÁRIO
+cNome.value="";
+cTelefone.value="";
+cLimite.value=500;
+
+// 🔥 VOLTAR BOTÃO
+const btn = document.querySelector("#clientes .primary");
+if(btn) btn.innerText = "Cadastrar Cliente";
+
+carregarClientes(); // 🔥 atualiza direto do banco
+}
+
+
+
+
+function atualizarClientes(){
+
+tClientes.innerHTML=`
+<tr>
+<th>Nome</th>
+<th>Telefone</th>
+<th>Saldo</th>
+<th>Limite</th>
+<th>Disponível</th>
+<th>Ações</th>
+</tr>`;
+
+clientes.forEach(c=>{
+
+let disponivel = c.limite - c.saldo;
+
+let corSaldo = c.saldo > 0 ? "color:#c62828;font-weight:bold;" : "";
+let corDisponivel = disponivel <= 0 
+? "color:#c62828;font-weight:bold;" 
+: "color:#2e7d32;font-weight:bold;";
+
+tClientes.innerHTML+=`
+<tr>
+<td>${c.nome}</td>
+<td>${c.telefone || ""}</td>
+<td style="${corSaldo}">R$ ${c.saldo.toFixed(2)}</td>
+<td>R$ ${c.limite.toFixed(2)}</td>
+<td style="${corDisponivel}">
+R$ ${disponivel.toFixed(2)}
+</td>
+<td>
+<div class="btn-group">
+
+<div class="tooltip">
+<button class="btn-small" onclick="verExtrato('${c.id}')">📄</button>
+<span class="tooltip-text">Ver Extrato</span>
+</div>
+
+<div class="tooltip">
+<button class="btn-small" onclick="editarCliente('${c.id}')">✏️</button>
+<span class="tooltip-text">Editar Cliente</span>
+</div>
+
+<div class="tooltip">
+<button class="btn-small" onclick="reimprimirUltimaVenda('${c.id}')">🖨</button>
+<span class="tooltip-text">Reimprimir Última Venda</span>
+</div>
+
+<div class="tooltip">
+<button class="btn-small" onclick="abrirPagamento('${c.nome}')">💰</button>
+<span class="tooltip-text">Registrar Pagamento</span>
+</div>
+
+<div class="tooltip">
+<button class="btn-small red" onclick="excluirCliente('${c.id}')">🗑</button>
+<span class="tooltip-text">Excluir Cliente</span>
+</div>
+
+</div>
+</td>
+</tr>`;
+});
+}
+
+
+
+async function reimprimirVenda(id){
+
+const { data: venda } = await supabaseClient
+.from("vendas")
+.select("*")
+.eq("id", id)
+.single();
+
+const { data: itens } = await supabaseClient
+.from("itens_venda")
+.select("*")
+.eq("venda_id", id);
+
+venda.itens = itens || [];
+
+reimprimirCupomVenda(venda);
+
+}
+
+
+
+
+async function reimprimirUltimaVenda(clienteId){
+
+const { data, error } = await supabaseClient
+.from("vendas")
+.select(`
+     *,
+     itens_venda (
+       quantidade,
+       preco_unitario,
+       produtos (
+         codigo,
+         produto
+       )
+     )
+   `)
+.eq("cliente_id", clienteId)
+.order("created_at", { ascending: false, nullsFirst: false }) 
+.limit(1)
+.maybeSingle();
+
+if(error || !data){
+console.error(error);
+alert("Nenhuma venda encontrada para este cliente.");
+return;
+}
+
+let vendaFormatada = {
+pedido: data.numero_venda,
+cliente: data.nome_do_cliente || "Consumidor",
+data: new Date(data.created_at).toLocaleString("pt-BR"),
+total: data.total,
+desconto: data.desconto || 0,
+pagamento: data.forma_pagamento,
+valorRecebido: data.valor_recebido || 0,
+troco: data.troco || 0,
+parcelas: data.parcelas || 1,
+
+itens: data.itens_venda.map(item => ({
+codigo: item.produtos.codigo, 
+nome: item.produtos.produto,
+qtd: item.quantidade,
+preco: item.preco_unitario
+}))
+};
+
+imprimirCupom(vendaFormatada.total,"REIMPRESSÃO",vendaFormatada);
+}
+
+
+
+function novaVendaCliente(nomeCliente){
+
+// muda para aba vendas
+document.getElementById("abaVendas").click();
+
+// preenche nome automaticamente
+clienteNome.value = nomeCliente;
+
+// já marca forma de pagamento como CONTA
+formaPagamento.value = "CONTA";
+
+alert("Cliente selecionado para nova venda.");
+
+}
+
+
+
+function abrirPagamento(nomeCliente){
+
+let cliente = clientes.find(c => c.nome === nomeCliente);
+if(!cliente) return;
+
+clientePagamentoAtual = cliente;
+
+document.getElementById("modalPagamento").style.display = "flex";
+
+document.getElementById("nomeClienteModal").innerText = cliente.nome;
+document.getElementById("saldoAtualModal").innerText = cliente.saldo.toFixed(2);
+
+let limiteDisponivel = cliente.limite - cliente.saldo;
+document.getElementById("limiteDisponivelModal").innerText = limiteDisponivel.toFixed(2);
+
+// limpa valor
+let campoValor = document.getElementById("valorPagamento");
+campoValor.value = "";
+
+// 🔥 FOCO AUTOMÁTICO
+setTimeout(() => {
+campoValor.focus();
+}, 100);
+}
+
+
+
+
+
+async function registrarPagamento(cliente, valor, formaPagamento){
+
+let saldoApos = cliente.saldo - valor;
+let limiteDisponivel = cliente.limite - saldoApos;
+
+const { data, error } = await supabaseClient
+.from("pagamentos")
+.insert([{
+cliente_id: cliente.id,
+valor: valor,
+forma_pagamento: formaPagamento,
+saldo_apos: saldoApos,
+limite_apos: limiteDisponivel
+}])
+.select()
+.single();
+
+if(error){
+console.error(error);
+alert("Erro ao registrar pagamento");
+return;
+}
+
+// gerar comprovante HTML
+const html = gerarHtmlComprovantePagamento(data, cliente.nome);
+
+// salvar comprovante no banco
+await supabaseClient
+.from("pagamentos")
+.update({ comprovante_html: html })
+.eq("id", data.id);
+
+// registrar movimentação
+await supabaseClient
+.from("movimentacoes_clientes")
+.insert([{
+cliente_id: cliente.id,
+data: new Date(),
+descricao: "💰 Pagamento",
+valor: valor,
+tipo: "debito",
+saldo_apos: saldoApos
+}]);
+
+// registrar no histórico geral
+await supabaseClient
+.from("vendas")
+.insert([{
+numero_venda: null,
+cliente_id: cliente.id,
+nome_do_cliente: cliente.nome,
+forma_pagamento: formaPagamento,
+subtotal: valor,
+desconto: 0,
+total: valor,
+valor_recebido: valor,
+troco: 0,
+parcelas: 1,
+tipo: "PAGAMENTO_CONTA",
+pagamento_id: data.id
+}]);
+
+// atualizar cliente
+await supabaseClient
+.from("clientes")
+.update({
+saldo: saldoApos,
+disponivel: limiteDisponivel
+})
+.eq("id", cliente.id);
+
+cliente.saldo = saldoApos;
+cliente.disponivel = limiteDisponivel;
+
+// imprimir comprovante salvo
+imprimirHtml(html);
+
+}
+
+
+
+
+
+async function gerarComprovante(pagamento){
+
+const cliente = document.getElementById("clienteNome").innerText
+
+const dataFormatada = new Date(pagamento.criado_em)
+.toLocaleString("pt-BR")
+
+document.getElementById("reciboNumero").innerText =
+pagamento.id.slice(0,8)
+
+document.getElementById("clienteNome").innerText = cliente
+
+document.getElementById("dataPagamento").innerText =
+dataFormatada
+
+document.getElementById("formaPagamento").innerText =
+pagamento.forma_pagamento
+
+document.getElementById("valorPago").innerText =
+"R$ " + pagamento.valor.toFixed(2)
+
+window.print()
+
+}
+
+
+
+
+
+async function confirmarPagamento(){
+
+let cliente = clientePagamentoAtual;
+if(!cliente) return;
+
+let valor = parseFloat(document.getElementById("valorPagamento").value);
+
+if(isNaN(valor) || valor <= 0){
+alert("Valor inválido.");
+return;
+}
+
+if(valor > cliente.saldo){
+alert("Valor maior que saldo.");
+return;
+}
+
+let formaPagamento = document.getElementById("formaPagamentoSelect").value;
+
+await registrarPagamento(cliente, valor, formaPagamento);
+
+alert("Pagamento registrado com sucesso!");
+
+fecharModalPagamento();
+await carregarClientes();
+}
+
+
+
+function fecharModalPagamento(){
+document.getElementById("modalPagamento").style.display = "none";
+clientePagamentoAtual = null;
+
+}
+
+
+
+async function excluirCliente(clienteId){
+
+if(!confirm("Deseja realmente excluir este cliente?")) return;
+
+const { error } = await supabaseClient
+.from("clientes")
+.delete()
+.eq("id", clienteId);
+
+if(error){
+console.error(error);
+alert("Erro ao excluir cliente");
+return;
+}
+
+alert("Cliente excluído com sucesso!");
+
+await carregarClientes();
+}
+
+
+function editarCliente(clienteId){
+
+  const cliente = clientes.find(c => c.id == clienteId);
+
+  if(!cliente){
+    alert("Cliente não encontrado");
+    return;
+  }
+
+  // 🔥 preenche formulário
+  document.getElementById("cNome").value = cliente.nome;
+  document.getElementById("cTelefone").value = cliente.telefone || "";
+  document.getElementById("cLimite").value = cliente.limite || 500;
+
+  // 🔥 ativa modo edição
+  clienteEditando = cliente.id;
+
+  // 🔥 muda botão
+  const btn = document.querySelector("#clientes .primary");
+  if(btn) btn.innerText = "Salvar";
+
+}
+
+
+
+async function carregarClientes(){
+
+const { data, error } = await supabaseClient
+.from("clientes")
+.select("*")
+.order("nome", { ascending: true });
+
+if(error){
+console.error(error);
+alert("Erro ao carregar clientes");
+return;
+}
+
+clientes = data; // 🔥 usa saldo real do banco
+
+
+atualizarClientes();
+}
+
+
+
+
+async function podeFinalizarVenda(clienteId, valorNovaVenda){
+
+const saldoInfo = await calcularSaldoCliente(clienteId);
+if(!saldoInfo) return false;
+
+const { data: cliente } = await supabaseClient
+.from("clientes")
+.select("limite")
+.eq("id", clienteId)
+.single();
+
+const novoSaldo = saldoInfo.saldo + valorNovaVenda;
+
+if(novoSaldo > cliente.limite){
+alert("Limite do cliente ultrapassado!");
+return false;
+}
+
+return true;
+}
+
+
+
+
+async function carregarExtratoCompleto(clienteId){
+
+const { data: vendas } = await supabaseClient
+.from("vendas")
+.select("id, total, criado_em")
+
+const { data: pagamentos } = await supabaseClient
+.from("pagamentos")
+.select("valor, criado_em")
+
+
+const extrato = [
+...vendas.map(v => ({ tipo: "Venda", valor: v.total, data: v.criado_em })),
+...pagamentos.map(p => ({ tipo: "Pagamento", valor: -p.valor, data: p.criado_em }))
+];
+
+extrato.sort((a,b) => new Date(a.data) - new Date(b.data));
+
+console.log(extrato);
+}
+
+
+
+
+
+async function calcularSaldoCliente(clienteId){
+
+// TOTAL VENDAS
+const { data: vendas, error: erroVendas } = await supabaseClient
+.from("vendas")
+.select("total")
+
+
+if(erroVendas){
+console.error(erroVendas);
+return null;
+}
+
+// TOTAL PAGAMENTOS
+const { data: pagamentos, error: erroPag } = await supabaseClient
+.from("pagamentos")
+.select("valor")
+
+
+if(erroPag){
+console.error(erroPag);
+return null;
+}
+
+const totalVendas = vendas.reduce((soma, v) => soma + Number(v.total), 0);
+const totalPagamentos = pagamentos.reduce((soma, p) => soma + Number(p.valor), 0);
+
+const saldo = totalVendas - totalPagamentos;
+
+return {
+totalVendas,
+totalPagamentos,
+saldo
+};
+}
+
+
+
+
+function reimprimirCupomVenda(venda){
+
+if(!venda){
+alert("Venda não encontrada");
+return;
+}
+
+imprimirCupom(venda.total, "REIMPRESSÃO", venda);
+
+}
+
+
+async function verSaldoRapido() {
+
+let info = document.getElementById("infoCliente");
+let clienteNome = document.getElementById("clienteNome").value;
+
+// 🔁 Se já estiver aberto, fecha
+if (info.style.display === "block") {
+info.style.display = "none";
+return;
+}
+
+if (!clienteNome) {
+alert("Digite o nome do cliente");
+return;
+}
+
+const { data, error } = await supabaseClient
+.from("clientes")
+.select("saldo, telefone")
+.ilike("nome", clienteNome)
+.limit(1)
+.single();
+
+if (error || !data) {
+info.style.display = "block";
+info.innerHTML = "⚠️ Cliente não cadastrado";
+return;
+}
+
+// 💰 mostrar saldo
+info.style.display = "block";
+info.innerHTML = `
+   👤 Cliente: <b>${clienteNome}</b><br>
+   📞 Telefone: ${data.telefone || "Não informado"}<br>
+   💰 Saldo: <b style="color:red">R$ ${Number(data.saldo || 0).toFixed(2)}</b>
+ `;
+}
+
+
+function fecharSaldo(){
+infoCliente.style.display = "none";
+infoCliente.innerHTML = "";
+}
+
+
+function cancelarVenda(){
+
+if(carrinho.length === 0){
+alert("Nenhuma venda em andamento.");
+return;
+}
+
+if(!confirm("Deseja realmente cancelar a venda atual?")) return;
+
+// limpa carrinho
+carrinho = [];
+
+// zera desconto
+descontoAtual = 0;
+
+// limpa cliente
+clienteNome.value = "";
+
+// 🔥 reseta forma de pagamento
+formaPagamento.value = "";
+areaCartao.style.display = "none";
+areaDinheiro.style.display = "none";
+
+// reseta parcelas
+if(parcelas) parcelas.value = 1;
+
+// limpa valores da tela
+document.getElementById("subtotal").innerText = "0.00";
+document.getElementById("descontoInfo").innerText = "0.00";
+document.getElementById("total").innerText = "0.00";
+
+// limpa pagamento
+valorRecebido.value = "";
+troco.value = "";
+
+// remove foco de inputs
+if(document.activeElement) document.activeElement.blur();
+
+// esconde saldo rápido
+fecharSaldo();
+
+// atualiza carrinho
+atualizarCarrinho();
+
+alert("Venda cancelada com sucesso!");
+
+}
+
+
+
+function converterOrcamento(id){
+
+let orc = vendas.find(v => v.id == id);
+
+if(!orc){
+alert("Orçamento não encontrado");
+return;
+}
+
+if(orc.tipo !== "ORCAMENTO"){
+alert("Este item não é um orçamento");
+return;
+}
+
+if(!confirm("Editar orçamento?")) return;
+
+orcamentoEmEdicaoId = orc.id;
+
+carrinho = orc.itens.map(item => {
+
+let indexProduto = produtos.findIndex(p => p.id === item.produto_id);
+
+return {
+index: indexProduto,
+nome: item.nome,
+preco: item.preco,
+qtd: item.qtd
+};
+
+});
+
+descontoAtual = orc.desconto || 0;
+
+clienteNome.value = orc.nome_do_cliente || "";
+formaPagamento.value = orc.forma_pagamento || "";
+
+show("pdv");
+
+atualizarCarrinho();
+
+alert("Orçamento carregado para edição ✏️");
+
+}
+
+
+
+
+async function reimprimirComprovantePagamento(id){
+
+const { data, error } = await supabaseClient
+.from("pagamentos")
+.select("comprovante_html")
+.eq("id", id)
+.single();
+
+if(error || !data){
+alert("Pagamento não encontrado");
+return;
+}
+
+imprimirHtml("<h3 style='text-align:center;'>SEGUNDA VIA DO COMPROVANTE</h3>" + data.comprovante_html);
+
+}
+
+
+
+function gerarHtmlComprovantePagamento(pagamento, clienteNome, reimpressao=false){
+
+let saldoApos = Number(pagamento.saldo_apos || 0);
+let limiteDisp = Number(pagamento.limite_apos || 0);
+
+let recibo = pagamento.id
+? String(pagamento.id).replace(/[^0-9]/g,"").slice(-6).padStart(6,"0")
+: "000000";
+
+let dataPg = pagamento.criado_em
+? new Date(pagamento.criado_em).toLocaleString("pt-BR")
+: new Date().toLocaleString("pt-BR");
+
+let valor = Number(pagamento.valor || 0);
+let forma = pagamento.forma_pagamento || "Dinheiro";
+
+return `
+<html>
+<head>
+<style>
+body{font-family:monospace;width:280px;padding:10px;font-size:12px;}
+.center{text-align:center;}
+.linha{display:flex;justify-content:space-between;}
+hr{border:none;border-top:1px dashed #000;margin:6px 0;}
+.valor{font-weight:bold;font-size:14px;}
+</style>
+</head>
+
+<body>
+
+<div class="center">
+${reimpressao ? "<strong>REIMPRESSÃO</strong><br>" : ""}
+<b>COMPROVANTE DE PAGAMENTO</b><br>
+Recibo Nº: ${recibo}<br><br>
+
+<strong>${config.nome || "JB SANTOS"}</strong><br>
+CNPJ: ${config.cnpj || ""}<br>
+${config.endereco || ""}<br>
+${config.telefone || ""}<br>
+</div>
+
+<hr>
+
+<div class="linha">
+<span>Cliente:</span>
+<span>${clienteNome}</span>
+</div>
+
+<div class="linha">
+<span>Data:</span>
+<span>${dataPg}</span>
+</div>
+
+<hr>
+
+<div class="linha">
+<span>Forma Pagto:</span>
+<span>${forma}</span>
+</div>
+
+<div class="linha valor">
+<span>Valor Pago:</span>
+<span>R$ ${valor.toFixed(2)}</span>
+</div>
+
+<hr>
+
+<div class="linha">
+<span>Saldo Atual:</span>
+<span>R$ ${saldoApos.toFixed(2)}</span>
+</div>
+
+<div class="linha">
+<span>Limite Disponível:</span>
+<span>R$ ${limiteDisp.toFixed(2)}</span>
+</div>
+
+<hr>
+
+<div class="center">
+Pagamento registrado com sucesso<br><br>
+________________________
+</div>
+
+</body>
+</html>
+`;
+}
+
+
+
+function imprimirHtml(html){
+
+let largura = 302;
+let w = window.open("", "", `width=${largura},height=600`);
+
+w.document.write(html);
+w.document.close();
+w.print();
+
+}
+
+
+
+function verificarFormaPagamentoModal(){
+
+let forma = document.getElementById("formaPagamentoSelect").value;
+let box = document.getElementById("parcelamentoBox");
+
+if(forma === "Cartão Crédito"){
+box.style.display = "block";
+gerarParcelas();
+} else {
+box.style.display = "none";
+}
+}
+
+
+
+function gerarParcelas(){
+
+let select = document.getElementById("selectParcelas");
+let valor = parseFloat(document.getElementById("valorPagamento").value) || 0;
+
+select.innerHTML = "";
+
+for(let i = 1; i <= 12; i++){
+let option = document.createElement("option");
+option.value = i;
+option.text = i + "x";
+select.appendChild(option);
+}
+
+calcularValorParcela();
+}
+
+
+
+
+function calcularValorParcela(){
+
+let valor = parseFloat(document.getElementById("valorPagamento").value) || 0;
+let parcelas = parseInt(document.getElementById("selectParcelas").value);
+
+let texto = document.getElementById("valorParcelaTexto");
+
+if(parcelas && valor){
+let valorParcela = valor / parcelas;
+texto.innerText = parcelas + "x de R$ " + valorParcela.toFixed(2);
+}
+}
+
+
+
+
+document.addEventListener("input", function(e){
+if(e.target.id === "valorPagamento"){
+verificarFormaPagamentoModal();
+}
+});
+
+document.addEventListener("change", function(e){
+if(e.target.id === "selectParcelas"){
+calcularValorParcela();
+}
+});
+
+
+
+window.onload = async function(){
+
+await carregarProdutos(); 
+
+preencherParcelas();
+
+await carregarClientes();
+
+atualizarClientes();
+
+tEstoque = document.getElementById("tEstoque");
+
+atualizarEstoque();
+
+await carregarHistoricoDoBanco(); // 🔥 carrega vendas
+
+atualizarDashboard(); // 🔥 calcula os cards
+
+};
+
+</script>
+
+
+<div id="modalPagamento" class="modal-overlay">
+
+<div class="modal-box">
+
+<h3>Registrar Pagamento</h3>
+
+<p>Cliente: <strong id="nomeClienteModal"></strong></p>
+<p>Saldo Atual: R$ <strong id="saldoAtualModal"></strong></p>
+<p>Limite Disponível: R$ <strong id="limiteDisponivelModal"></strong></p>
+
+<label>Valor:</label>
+<input type="number" id="valorPagamento">
+
+<label>Forma de Pagamento:</label>
+<select id="formaPagamentoSelect" onchange="verificarFormaPagamento()">
+<option value="Dinheiro">Dinheiro</option>
+<option value="PIX">PIX</option>
+<option value="Cartão Débito">Cartão Débito</option>
+<option value="Cartão Crédito">Cartão Crédito</option>
+</select>
+
+
+<div id="parcelamentoBox" style="display:none;">
+
+<label>Parcelas:</label>
+<select id="selectParcelas"></select>
+
+<p id="valorParcelaTexto" style="margin-top:5px; font-weight:bold;"></p>
+
+</div>
+
+
+<div class="modal-botoes">
+<button class="btn-confirmar" onclick="confirmarPagamento()">Confirmar</button>
+<button class="btn-cancelar" onclick="fecharModalPagamento()">Cancelar</button>
+</div>
+
+</div>
+</div>
+
+
+
+<!-- MODAL EXTRATO -->
+<div id="modalExtrato" class="modal-overlay">
+<div class="modal-box" style="width:650px; max-height:80vh; display:flex; flex-direction:column;">
+
+<h3>📄 Extrato do Cliente</h3>
+
+<div style="font-size:14px; margin-bottom:10px;">
+<b>Cliente:</b> <span id="extratoNome"></span><br>
+<b>Saldo atual:</b>
+<span id="extratoSaldo" style="font-weight:bold;"></span>
+</div>
+
+<div style="flex:1; overflow:auto; border:1px solid #ddd; border-radius:6px;">
+<table style="width:100%; border-collapse:collapse;">
+<thead>
+<tr style="background:#111;color:#fff;">
+<th style="padding:8px;">Data</th>
+<th style="padding:8px;">Descrição</th>
+<th style="padding:8px;">Valor</th>
+
+<th style="padding:8px;">Saldo</th>
+</tr>
+</thead>
+<tbody id="extratoTabela"></tbody>
+</table>
+</div>
+
+<div style="margin-top:10px; text-align:right;">
+<button class="btn-cancelar" onclick="fecharExtrato()">Fechar</button>
+</div>
+
+</div>
+</div>
+
+
+
+<script>
+
+// Variável global (declare apenas uma vez no seu projeto inteiro)
+let config = {};
+
+// Função para carregar
+async function carregarConfig() {
+
+const { data, error } = await supabaseClient
+.from("empresa")
+.select("*")
+.limit(1)
+.maybeSingle();
+
+if (error) {
+console.error(error);
+return;
+}
+
+if (data) {
+config = data;
+
+document.getElementById("confNome").value = data.nome || "";
+document.getElementById("confCnpj").value = data.cnpj || "";
+document.getElementById("confEndereco").value = data.endereco || "";
+document.getElementById("confTelefone").value = data.telefone || "";
+document.getElementById("confEmail").value = data.email || "";
+}
+}
+
+// Quando a página carregar
+document.addEventListener("DOMContentLoaded", () => {
+carregarConfig();
+document.getElementById("btnSalvar").addEventListener("click", window.salvarConfig);
+});
+
+
+
+async function mostrarUsuario(){
+
+const { data: userData } = await supabaseClient.auth.getUser();
+if(!userData.user) return;
+
+const userId = userData.user.id;
+
+const { data } = await supabaseClient
+.from("usuarios")
+.select("nome")
+.eq("id", userId)
+.single();
+
+if(data){
+document.getElementById("usuario-logado").innerText =
+"👤 " + data.nome;
+}
+
+/* só mostrar na tela inicial */
+
+const historicoVisivel =
+document.getElementById("historico").style.display !== "none";
+
+if(historicoVisivel){
+document.getElementById("topUser").style.display = "none";
+}else{
+document.getElementById("topUser").style.display = "flex";
+}
+
+}
+
+mostrarUsuario();
+
+
+async function logout(){
+try{
+await supabaseClient.auth.signOut();
+window.location.replace("login.html");
+}catch(error){
+console.error("Erro ao sair:", error);
+}
+}
+
+
+setInterval(() => {
+
+const inicio = document.getElementById("inicio");
+const topUser = document.getElementById("topUser");
+
+if(!inicio || !topUser) return;
+
+const inicioVisivel = window.getComputedStyle(inicio).display !== "none";
+
+if(inicioVisivel){
+topUser.style.display = "flex";
+}else{
+topUser.style.display = "none";
+}
+
+}, 300);
+
+
+async function editarEstoque(id, qtdAtual){
+
+let novaQtd = prompt("Editar quantidade em estoque:", qtdAtual);
+
+if(novaQtd === null) return;
+
+novaQtd = parseFloat(novaQtd);
+
+if(isNaN(novaQtd)){
+alert("Quantidade inválida");
+return;
+}
+
+const { error } = await supabaseClient
+.from("produtos")
+.update({ quantidade: novaQtd })
+.eq("id", id);
+
+if(error){
+alert("Erro ao atualizar estoque");
+console.log(error);
+return;
+}
+
+await carregarProdutos();
+atualizarEstoque();
+
+}
+
+
+function atualizarDashboard(){
+
+let hoje = new Date().toDateString();
+
+let vendasHoje = vendas.filter(v =>
+new Date(v.created_at).toDateString() === hoje
+);
+
+let totalVendas = vendasHoje.filter(v => v.tipo === "VENDA").length;
+
+let pedidosDia = vendasHoje.filter(v =>
+v.tipo === "VENDA" ||
+v.tipo === "CONTA_CLIENTE" ||
+v.tipo === "ORCAMENTO"
+).length;
+
+let faturamento = 0;
+let lucro = 0;
+
+vendasHoje.forEach(v => {
+
+if(v.tipo === "VENDA" || v.tipo === "CONTA_CLIENTE"){
+faturamento += Number(v.total);
+}
+
+if(v.itens){
+
+v.itens.forEach(item =>{
+
+let produto = produtos.find(p => p.id === item.produto_id);
+
+if(produto){
+
+let custo = Number(produto.custo || produto.pCusto || 0);
+
+lucro += (item.preco - custo) * item.qtd;
+
+}
+
+});
+
+}
+
+});
+
+let ticketMedio = totalVendas > 0
+? faturamento / totalVendas
+: 0;
+
+
+// clientes devendo
+
+let clientesDevedores = clientes.filter(c => c.saldo > 0).length;
+
+
+// atualizar tela
+
+document.getElementById("dashLucro").innerText =
+"R$ " + lucro.toFixed(2);
+
+document.getElementById("dashVendas").innerText =
+totalVendas;
+
+document.getElementById("dashPedidos").innerText =
+pedidosDia;
+
+document.getElementById("dashTicket").innerText =
+"R$ " + ticketMedio.toFixed(2);
+
+document.getElementById("dashDevedores").innerText =
+clientesDevedores;
+
+}
+
+   
+</script>
+
+</body>
+</html>
