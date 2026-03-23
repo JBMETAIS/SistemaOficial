@@ -120,7 +120,8 @@ box-shadow:0 4px 12px rgba(0,0,0,0.4);
 :root{
 --cor-primaria:#ff7a00;
 --cor-secundaria:#0f0f0f;
---vermelho:#c62828; /* 🔥 FALTAVA ISSO */
+--vermelho:#c62828;
+--verde:#1fa84f; /* 🔥 ADICIONA ISSO */
 --bg-sistema:url('LogoGS.png');
 }
 
@@ -199,7 +200,7 @@ font-weight:bold;
 }
 
 button.green{
-background: var(--cor-primaria);
+background: var(--verde);
 color:#fff;
 font-weight:bold;
 padding:14px;
@@ -207,6 +208,11 @@ border-radius:8px;
 border:none;
 box-shadow:0 0 10px rgba(0,0,0,0.3);
 transition:0.2s;
+}
+
+button.green:hover{
+filter:brightness(1.1);
+transform:scale(1.02);
 }
 
 button.green:hover{
@@ -235,10 +241,6 @@ transition:0.2s;
 background: var(--cor-primaria);
 }
 
-   button.green{
-background: var(--cor-primaria);
-box-shadow:0 0 10px rgba(0,0,0,0.3);
-}
 
    button.red{
 background: var(--vermelho);
@@ -489,7 +491,7 @@ table-layout:fixed;
 
 /* cabeçalho */
 #tEstoque th{
-background:#000;
+background: var(--cor-secundaria);
 color:#fff;
 padding:10px;
 font-weight:bold;
