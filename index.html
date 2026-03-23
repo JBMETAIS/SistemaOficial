@@ -116,17 +116,16 @@ box-shadow:0 4px 12px rgba(0,0,0,0.4);
 
 
 :root{
---preto:#0f0f0f;
---laranja:#ff7a00;
---verde:#1fa84f;
---vermelho:#c62828;
+--cor-primaria:#ff7a00;
+--cor-secundaria:#0f0f0f;
+--bg-sistema:url('LogoGS.png');
 }
 
 *{box-sizing:border-box;font-family:Arial}
 
 body{
 margin:0;
-background:url('LogoGS.png') no-repeat center center fixed;
+background:var(--bg-sistema) no-repeat center center fixed;
 background-size:cover;
 }
 
@@ -835,15 +834,49 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 </section>
 
 <section id="config" style="display:none">
-<h1>Configurações da Empresa</h1>
+
+<h1>Configurações</h1>
+
 <div class="card">
+
+<button class="primary" onclick="abrirEmpresa()">🏢 Dados da Empresa</button>
+
+<button class="primary" onclick="abrirPersonalizacao()">🎨 Personalização</button>
+
+</div>
+
+<!-- EMPRESA -->
+<div id="areaEmpresa" style="display:none;">
+<h2>Dados da Empresa</h2>
+
 <input id="confNome" placeholder="Nome da Empresa">
 <input id="confCnpj" placeholder="CNPJ">
 <input id="confEndereco" placeholder="Endereço">
 <input id="confTelefone" placeholder="Telefone">
 <input id="confEmail" placeholder="E-mail da Empresa">
-<button id="btnSalvar" class="primary">Salvar</button>
+
+<button class="primary" onclick="salvarConfig()">Salvar</button>
 </div>
+
+<!-- PERSONALIZAÇÃO -->
+<div id="areaPersonalizacao" style="display:none;">
+<h2>Personalização do Sistema</h2>
+
+<label>Cor Principal</label>
+<input type="color" id="corPrimaria">
+
+<label>Cor Secundária</label>
+<input type="color" id="corSecundaria">
+
+<label>Logo</label>
+<input type="file" id="logoInput">
+
+<label>Papel de parede</label>
+<input type="file" id="bgInput">
+
+<button class="primary" onclick="salvarTema()">Salvar Tema</button>
+</div>
+
 </section>
 
 <section id="clientes" style="display:none">
@@ -922,6 +955,17 @@ if(id==="inicio") atualizarDashboard();
 }
 
 
+
+function abrirEmpresa(){
+areaEmpresa.style.display = "block";
+areaPersonalizacao.style.display = "none";
+}
+
+function abrirPersonalizacao(){
+areaEmpresa.style.display = "none";
+areaPersonalizacao.style.display = "block";
+}
+   
 
 function atualizarResumoEstoque(lista){
 
