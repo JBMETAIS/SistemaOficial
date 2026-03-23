@@ -2614,8 +2614,10 @@ tabela.innerHTML += `
 <td style="color:${cor};font-weight:bold;">${status}</td>
 <td>${bolinha}</td>
 <td>
+<div class="tooltip">
   <button class="btn-small" onclick="abrirModalEstoque('${p.id}')">✏️</button>
   <span class="tooltip-text">Inventário</span>
+  </div>  
 </td>
 
 </tr>
