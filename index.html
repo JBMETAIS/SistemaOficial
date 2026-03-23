@@ -34,6 +34,7 @@ document.body.style.visibility = "visible";
 }
 
 aplicarTema();
+aplicarImagens();
    
 } catch (error) {
 console.error("Erro ao verificar login:", error);
@@ -922,10 +923,10 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 <input type="color" id="corSecundaria" onchange="previewTema()">
 
 <label>Logo</label>
-<input type="file" id="logoInput">
+<input type="file" id="logoInput" onchange="previewTema()">
 
 <label>Papel de parede</label>
-<input type="file" id="bgInput">
+<input type="file" id="bgInput" onchange="previewTema()">
 
 <button class="primary" onclick="salvarTema()">Salvar Tema</button>
 </div>
@@ -4435,15 +4436,60 @@ clientesDevedores;
 }
 
 
-   function previewTema(){
+  function previewTema(){
 
 const corPrimaria = document.getElementById("corPrimaria").value;
 const corSecundaria = document.getElementById("corSecundaria").value;
 
+const logoInput = document.getElementById("logoInput");
+const bgInput = document.getElementById("bgInput");
+
+// 🎨 CORES
 document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
 document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
 
+// 🖼️ LOGO
+if(logoInput.files && logoInput.files[0]){
+const reader = new FileReader();
+
+reader.onload = function(e){
+document.querySelector(".sidebar img").src = e.target.result;
+localStorage.setItem("logo", e.target.result);
 }
+
+reader.readAsDataURL(logoInput.files[0]);
+}
+
+// 🌄 BACKGROUND
+if(bgInput.files && bgInput.files[0]){
+const reader2 = new FileReader();
+
+reader2.onload = function(e){
+document.documentElement.style.setProperty('--bg-sistema', `url(${e.target.result})`);
+localStorage.setItem("bg", e.target.result);
+}
+
+reader2.readAsDataURL(bgInput.files[0]);
+}
+
+}
+
+function aplicarImagens(){
+
+const logo = localStorage.getItem("logo");
+const bg = localStorage.getItem("bg");
+
+if(logo){
+document.querySelector(".sidebar img").src = logo;
+}
+
+if(bg){
+document.documentElement.style.setProperty('--bg-sistema', `url(${bg})`);
+}
+
+}
+
+
    
 </script>
 
