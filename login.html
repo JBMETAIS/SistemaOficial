@@ -273,7 +273,7 @@ inset 0 0 10px rgba(0,0,0,0.8);
   <button type="button" class="botao-olho" onclick="toggleSenha()">👁</button>
 </div>
 
-<button onclick="login()">Entrar</button>
+<button id="btnLogin" onclick="login()">Entrar</button>
 
 <div id="erro" class="erro"></div>
 
@@ -292,7 +292,7 @@ inset 0 0 10px rgba(0,0,0,0.8);
   // ------------------------------
  async function login() {
 
-  const botao = document.querySelector("button");
+  const botao = document.getElementById("btnLogin");
   botao.disabled = true;
   botao.innerText = "Entrando...";
 
