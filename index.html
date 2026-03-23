@@ -189,7 +189,7 @@ border:1px solid #ccc;
 }
 
 button.primary{
-background:var(--laranja);
+background:var(--cor-primaria);
 border:0;
 padding:12px;
 border-radius:6px;
@@ -865,10 +865,10 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 <h2>Personalização do Sistema</h2>
 
 <label>Cor Principal</label>
-<input type="color" id="corPrimaria">
+<input type="color" id="corPrimaria" onchange="previewTema()">
 
 <label>Cor Secundária</label>
-<input type="color" id="corSecundaria">
+<input type="color" id="corSecundaria" onchange="previewTema()">
 
 <label>Logo</label>
 <input type="file" id="logoInput">
@@ -4383,6 +4383,16 @@ clientesDevedores;
 
 }
 
+
+   function previewTema(){
+
+const corPrimaria = document.getElementById("corPrimaria").value;
+const corSecundaria = document.getElementById("corSecundaria").value;
+
+document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
+document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
+
+}
    
 </script>
 
