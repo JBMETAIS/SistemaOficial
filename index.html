@@ -56,7 +56,7 @@ async function verificarLogin() {
           background: ""
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (insertError) {
         console.error("Erro ao criar configurações:", insertError);
