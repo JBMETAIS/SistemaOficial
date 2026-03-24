@@ -213,7 +213,7 @@ margin-bottom:20px;
   background: #fff;
   padding: 30px;
   border-radius: 16px;
-  max-width: 200px;
+  max-width: 420px;
   margin: 40px auto;
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
@@ -273,6 +273,19 @@ button.primary:hover {
   opacity: 0.9;
 }
 
+
+  .menu-topo {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.menu-topo button {
+  width: auto;        /* 🔥 ESSENCIAL */
+  padding: 10px 20px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
 
 body::before {
   content: "";
@@ -985,12 +998,9 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 
 <h1>Configurações</h1>
 
-<div class="card">
-
-<button class="primary" onclick="abrirEmpresa()">🏢 Dados da Empresa</button>
-
-<button class="primary" onclick="abrirPersonalizacao()">🎨 Personalização</button>
-
+<div class="menu-topo">
+  <button class="primary">🏢 Dados da Empresa</button>
+  <button class="primary">🎨 Personalização</button>
 </div>
 
 <!-- EMPRESA -->
