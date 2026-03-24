@@ -1135,9 +1135,12 @@ async function salvarTema(){
       background: bgUrl
     });
 
- alert("Tema salvo!");
+alert("Tema salvo!");
 
-aplicarTema();
+aplicarTema({
+  cor_primaria: corPrimaria,
+  cor_secundaria: corSecundaria
+});
 
 aplicarImagens({
   logo: logoUrl,
