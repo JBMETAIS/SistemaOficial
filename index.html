@@ -1116,7 +1116,7 @@ async function salvarTema(){
   let bgUrl = atual?.background || null;
 
   if (logoInput.files[0]) {
-    logoUrl = await uploadImagem(logoInput.files[0], user.id);
+    logoUrl = await uploadImagem(logoInput.files[0], "logos");
   }
 
   if (bgInput.files[0]) {
@@ -2532,12 +2532,6 @@ const { data: empresa } = await supabaseClient
 .limit(1)
 .single();
 
-const { data: config } = await supabaseClient
-.from("configuracoes_usuario")
-.select("*")
-.limit(1)
-.single();
-
 const emp = empresa || {};
 console.log("EMPRESA:", emp);
 let dataBase = orc.data || orc.created_at || orc.data_venda || Date.now();
@@ -2664,7 +2658,7 @@ font-weight:bold;
 <div class="topo">
 
 <div style="width:120px;">
-<img src="${config.logo || 'logojb.png'}" class="logo">
+<img src="logojb.png" class="logo">
 </div>
 
 <div style="flex:1;text-align:center;font-size:14px;">
