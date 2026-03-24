@@ -37,16 +37,18 @@ async function verificarLogin() {
     const userId = sessionData.session.user.id;
 
     // Busca as configurações do usuário
-    const { data: configs, error: configError } = await supabaseClient
-      .from('configuracoes_usuario')
-      .select('*')
-      .eq('user_id', userId)
-      
+  const { data: configs, error } = await supabaseClient
+  .from('configuracoes_usuario')
+  .select('*')
+  .eq('user_id', userId); // <-- sem .single()
 
-    if (configError) {
-      console.error("Erro ao buscar configurações:", configError);
-    } else {
-      console.log("Configurações do usuário:", configs);
+if (error) {
+  console.error("Erro ao buscar configurações:", error);
+} else if (configs.length === 0) {
+  console.log("Nenhuma configuração encontrada para este usuário.");
+} else {
+  console.log("Configurações do usuário:", configs[0]);
+}
       // Aqui você chama suas funções que aplicam o tema e imagens
       aplicarTema(configs);
       aplicarImagens(configs);
