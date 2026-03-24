@@ -33,25 +33,45 @@ async function verificarLogin() {
       document.body.style.visibility = "visible";
     }
 
-    // Pega o ID do usuário logado
     const userId = sessionData.session.user.id;
 
-    // Busca as configurações do usuário
-  const { data: configs, error } = await supabaseClient
-  .from('configuracoes_usuario')
-  .select('*')
-  .eq('user_id', userId); // <-- sem .single()
+    const { data: configs, error: configError } = await supabaseClient
+      .from('configuracoes_usuario')
+      .select('*')
+      .eq('user_id', userId);
 
-if (error) {
-  console.error("Erro ao buscar configurações:", error);
-} else if (configs.length === 0) {
-  console.log("Nenhuma configuração encontrada para este usuário.");
-} else {
-  console.log("Configurações do usuário:", configs[0]);
-}
-      // Aqui você chama suas funções que aplicam o tema e imagens
-      aplicarTema(configs);
-      aplicarImagens(configs);
+    if (configError) {
+      console.error("Erro ao buscar configurações:", configError);
+
+    } else if (configs.length === 0) {
+      console.log("Usuário sem configurações, criando padrão...");
+
+      const { data: newConfig, error: insertError } = await supabaseClient
+        .from('configuracoes_usuario')
+        .insert({
+          user_id: userId,
+          cor_primaria: "#000000",
+          cor_segundaria: "#ffffff",
+          logo: "",
+          background: ""
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error("Erro ao criar configurações:", insertError);
+      } else {
+        aplicarTema(newConfig);
+        aplicarImagens(newConfig);
+      }
+
+    } else {
+      const config = configs[0];
+
+      console.log("Configurações do usuário:", config);
+
+      aplicarTema(config);
+      aplicarImagens(config);
     }
 
   } catch (error) {
@@ -60,6 +80,7 @@ if (error) {
   }
 }
 
+// ✅ CHAMA AQUI FORA
 verificarLogin();
 </script>
 
@@ -238,7 +259,7 @@ button.green:hover{
 filter:brightness(1.1);
 transform:scale(1.02);
 }
-   
+
 button.red{
 background: var(--vermelho) !important;
 color:#fff !important;
@@ -269,7 +290,7 @@ background: var(--vermelho);
 filter:brightness(1.1);
 transform:scale(1.02);
 }
-   
+
 table{
 width:100%;
 border-collapse:collapse;
@@ -639,7 +660,7 @@ margin-top:120px;
 }
 
 
-   
+
 </style>
 </head>
 
@@ -746,7 +767,7 @@ placeholder="Pesquisar produto ou código..."
 oninput="filtrarProdutos()"
 style="padding:8px;width:300px;margin:15px 0;border-radius:6px;border:1px solid #ccc;"
 >
-   
+
 <table id="tProdutos"></table>
 </section>
 
@@ -1002,7 +1023,7 @@ style="padding:8px;width:300px;margin:15px 0;border-radius:6px;border:1px solid 
 </div>
 
 
-   
+
 <script>
 
 let produtos=JSON.parse(localStorage.getItem("produtosJB"))||[];
@@ -1037,7 +1058,7 @@ function abrirPersonalizacao(){
 areaEmpresa.style.display = "none";
 areaPersonalizacao.style.display = "block";
 }
-   
+
 
 
 async function salvarTema(){
@@ -1122,7 +1143,7 @@ document.body.style.background = `url(${bg}) no-repeat center center fixed`;
 document.body.style.backgroundSize = "cover";
 }
 
-   
+
 function atualizarResumoEstoque(lista){
 
 let totalItens = 0;
@@ -1532,7 +1553,7 @@ window.editarProduto = function(id){
   console.log("ID recebido:", id);
 
 console.log("SALVANDO - produtoEditando:", window.produtoEditando);
-  
+
 const p = produtos.find(prod => String(prod.id) === String(id));
 
 if(!p){
@@ -2883,7 +2904,7 @@ function abrirModalEstoque(id){
   fecharModalEstoque();
   carregarProdutos();
 }
-   
+
 
 
      function fecharModalEstoque(){
@@ -2891,7 +2912,7 @@ function abrirModalEstoque(id){
   produtoEstoqueEditando = null;
 }
 
-   
+
 
 function filtrarEstoque(){
 atualizarEstoque();
@@ -4551,7 +4572,7 @@ document.documentElement.style.setProperty('--bg-sistema', `url(${bg})`);
 }
 
 
-   
+
 </script>
 
 </body>
