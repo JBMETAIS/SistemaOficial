@@ -209,93 +209,20 @@ border-radius:10px;
 margin-bottom:20px;
 }
 
-.card-config {
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  max-width: 420px;
-  margin: 40px auto;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+#config .card button {
+    display: block;
+     width: 200px;
+    margin-bottom: 10px;
 }
 
-h2 {
-  margin-bottom: 20px;
+input,select{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:6px;
+border:1px solid #ccc;
 }
 
-h4 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #555;
-}
-
-/* INPUTS DE COR */
-.color-field input {
-  width: 100%;
-  height: 50px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* UPLOAD BONITO */
-.upload-box {
-  display: block;
-  border: 2px dashed #ccc;
-  padding: 25px;
-  text-align: center;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-bottom: 15px;
-  transition: 0.2s;
-}
-
-.upload-box:hover {
-  border-color: var(--cor-primaria);
-  background: rgba(0,0,0,0.03);
-}
-
-/* BOTÃO */
-button.primary {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  border-radius: 12px;
-  font-weight: bold;
-  background: var(--cor-primaria);
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button.primary:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-
-  .menu-topo {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-
-.menu-topo button {
-  width: auto;        /* 🔥 ESSENCIAL */
-  padding: 10px 20px;
-  border-radius: 10px;
-  white-space: nowrap;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: -1;
-}
-  
-  
 button.primary{
 background:var(--cor-primaria);
 border:0;
@@ -343,12 +270,10 @@ cursor:pointer;
 transition:0.2s;
 }
 
- button.primary {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border-radius: 10px;
+   button.primary{
+background: var(--cor-primaria);
 }
+
 
    button.red{
 background: var(--vermelho);
@@ -998,9 +923,12 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 
 <h1>Configurações</h1>
 
-<div class="menu-topo">
-  <button class="primary">🏢 Dados da Empresa</button>
-  <button class="primary">🎨 Personalização</button>
+<div class="card">
+
+<button class="primary" onclick="abrirEmpresa()">🏢 Dados da Empresa</button>
+
+<button class="primary" onclick="abrirPersonalizacao()">🎨 Personalização</button>
+
 </div>
 
 <!-- EMPRESA -->
@@ -1016,38 +944,23 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 <button class="primary" onclick="salvarConfig()">Salvar</button>
 </div>
 
-<div class="card-config">
+<!-- PERSONALIZAÇÃO -->
+<div id="areaPersonalizacao" style="display:none;">
+<h2>Personalização do Sistema</h2>
 
-  <h2>🎨 Personalização</h2>
+<label>Cor Principal</label>
+<input type="color" id="corPrimaria" onchange="previewTema()">
 
-  <h4>Cores</h4>
+<label>Cor Secundária</label>
+<input type="color" id="corSecundaria" onchange="previewTema()">
 
-  <div class="color-field">
-    <label>Cor Principal</label>
-    <input type="color" id="corPrimaria" oninput="previewTema()">
-  </div>
+<label>Logo</label>
+<input type="file" id="logoInput" onchange="previewTema()">
 
-  <div class="color-field">
-    <label>Cor Secundária</label>
-    <input type="color" id="corSecundaria" oninput="previewTema()">
-  </div>
+<label>Papel de parede</label>
+<input type="file" id="bgInput" onchange="previewTema()">
 
-  <h4>Logo</h4>
-
-  <label class="upload-box">
-    <input type="file" id="logoInput" onchange="previewTema()" hidden>
-    <span>📁 Clique para enviar o logo</span>
-  </label>
-
-  <h4>Papel de parede</h4>
-
-  <label class="upload-box">
-    <input type="file" id="bgInput" onchange="previewTema()" hidden>
-    <span>🖼️ Clique para enviar o fundo</span>
-  </label>
-
-  <button class="primary" onclick="salvarTema()">Salvar Tema</button>
-
+<button class="primary" onclick="salvarTema()">Salvar Tema</button>
 </div>
 
 </section>
@@ -4612,36 +4525,46 @@ clientesDevedores;
 }
 
 
-  function previewTema() {
+  function previewTema(){
+
   const corPrimaria = document.getElementById("corPrimaria").value;
   const corSecundaria = document.getElementById("corSecundaria").value;
-  const logoInput = document.getElementById("logoInput").files[0];
-  const bgInput = document.getElementById("bgInput").files[0];
 
-  // Aplica cores
+  const logoInput = document.getElementById("logoInput");
+  const bgInput = document.getElementById("bgInput");
+
+  // 🎨 CORES (ok manter no localStorage)
   document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
   document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
 
-  // Preview logo
-  if (logoInput) {
+  localStorage.setItem("corPrimaria", corPrimaria);
+  localStorage.setItem("corSecundaria", corSecundaria);
+
+  // 🖼️ LOGO (SÓ PREVIEW, NÃO SALVAR)
+  if (logoInput.files && logoInput.files[0]) {
     const reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("logoPreview").src = e.target.result;
-    };
-    reader.readAsDataURL(logoInput);
+
+    reader.onload = function(e){
+      document.querySelector(".sidebar img").src = e.target.result;
+      // ❌ NÃO salvar no localStorage
+    }
+
+    reader.readAsDataURL(logoInput.files[0]);
   }
 
-  // Preview background
-  if (bgInput) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.body.style.backgroundImage = `url(${e.target.result})`;
-    };
-    reader.readAsDataURL(bgInput);
+  // 🌄 BACKGROUND (SÓ PREVIEW)
+  if (bgInput.files && bgInput.files[0]) {
+    const reader2 = new FileReader();
+
+    reader2.onload = function(e){
+      document.documentElement.style.setProperty('--bg-sistema', `url(${e.target.result})`);
+      // ❌ NÃO salvar no localStorage
+    }
+
+    reader2.readAsDataURL(bgInput.files[0]);
   }
 }
 
-  
 function aplicarImagens(){
 
   const corPrimaria = localStorage.getItem("corPrimaria");
