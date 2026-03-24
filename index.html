@@ -1024,28 +1024,71 @@ areaPersonalizacao.style.display = "block";
 
 async function salvarTema(){
 
+const user = (await supabaseClient.auth.getUser()).data.user;
+
 const corPrimaria = document.getElementById("corPrimaria").value;
 const corSecundaria = document.getElementById("corSecundaria").value;
 
-localStorage.setItem("tema", JSON.stringify({
-corPrimaria,
-corSecundaria
-}));
+const logoInput = document.getElementById("logoInput");
+const bgInput = document.getElementById("bgInput");
 
-aplicarTema();
+let logoUrl = null;
+let bgUrl = null;
+
+// upload logo
+if(logoInput.files[0]){
+logoUrl = await uploadImagem(logoInput.files[0], "logos");
+}
+
+// upload background
+if(bgInput.files[0]){
+bgUrl = await uploadImagem(bgInput.files[0], "bg");
+}
+
+// 🔥 UPSERT (cria ou atualiza)
+await supabaseClient
+.from("configuracoes_usuario")
+.upsert({
+user_id: user.id,
+cor_primaria: corPrimaria,
+cor_secundaria: corSecundaria,
+logo: logoUrl,
+background: bgUrl
+});
 
 alert("Tema salvo!");
 }
 
+  async function aplicarTema(){
 
-   function aplicarTema(){
+const user = (await supabaseClient.auth.getUser()).data.user;
 
-const tema = JSON.parse(localStorage.getItem("tema"));
+const { data } = await supabaseClient
+.from("configuracoes_usuario")
+.select("*")
+.eq("user_id", user.id)
+.single();
 
-if(!tema) return;
+if(!data) return;
 
-document.documentElement.style.setProperty('--cor-primaria', tema.corPrimaria);
-document.documentElement.style.setProperty('--cor-secundaria', tema.corSecundaria);
+// cores
+if(data.cor_primaria){
+document.documentElement.style.setProperty('--cor-primaria', data.cor_primaria);
+}
+
+if(data.cor_secundaria){
+document.documentElement.style.setProperty('--cor-secundaria', data.cor_secundaria);
+}
+
+// logo
+if(data.logo){
+document.querySelector(".sidebar img").src = data.logo;
+}
+
+// background
+if(data.background){
+document.documentElement.style.setProperty('--bg-sistema', `url(${data.background})`);
+}
 
 }
 
