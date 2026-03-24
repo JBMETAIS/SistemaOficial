@@ -18,10 +18,13 @@ visibility: hidden;
 
 <script>
 const SUPABASE_URL = "https://kuofgelguuzfokqltjqu.supabase.co";
-const SUPABASE_KEY = "sb_publishable_k_WH1HT6JN_QwJCV3GN2Gw_1FqLc34l";
+const SUPABASE_KEY = "SUA_KEY";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ==========================
+// 1. FUNÇÃO DE LOGIN
+// ==========================
 async function verificarLogin() {
   try {
     const { data: sessionData } = await supabaseClient.auth.getSession();
@@ -29,59 +32,65 @@ async function verificarLogin() {
     if (!sessionData.session) {
       window.location.replace("login.html");
       return;
-    } else {
-      document.body.style.visibility = "visible";
     }
 
-    const userId = sessionData.session.user.id;
-
-    const { data: configs, error: configError } = await supabaseClient
-      .from('configuracoes_usuario')
-      .select('*')
-      .eq('user_id', userId);
-
-    if (configError) {
-      console.error("Erro ao buscar configurações:", configError);
-
-    } else if (configs.length === 0) {
-      console.log("Usuário sem configurações, criando padrão...");
-
-      const { data: newConfig, error: insertError } = await supabaseClient
-        .from('configuracoes_usuario')
-        .insert({
-          user_id: userId,
-          cor_primaria: "#000000",
-          cor_secundaria: "#ffffff",
-          logo: "",
-          background: ""
-        })
-        .select()
-        .single();
-
-      if (insertError) {
-        console.error("Erro ao criar configurações:", insertError);
-      } else {
-        aplicarTema(newConfig);
-        aplicarImagens(newConfig);
-      }
-
-    } else {
-      const config = configs[0];
-
-      console.log("Configurações do usuário:", config);
-
-      aplicarTema(config);
-      aplicarImagens(config);
-    }
+    document.body.style.visibility = "visible";
 
   } catch (error) {
-    console.error("Erro ao verificar login:", error);
-    window.location.replace("login.html");
+    console.error(error);
   }
 }
 
-// ✅ CHAMA AQUI FORA
+// ==========================
+// 2. CHAMA LOGIN
+// ==========================
 verificarLogin();
+
+
+// ==========================
+// 3. FUNÇÃO DE UPLOAD
+// ==========================
+async function uploadImagem(file, userId) {
+  const fileName = `${userId}-${Date.now()}`;
+
+  const { error } = await supabaseClient.storage
+    .from('logos')
+    .upload(fileName, file);
+
+  if (error) {
+    console.error("Erro no upload:", error);
+    return null;
+  }
+
+  const { data } = supabaseClient.storage
+    .from('logos')
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
+
+
+// ==========================
+// 4. EVENTO DO INPUT (AQUI!)
+// ==========================
+document.getElementById("inputLogo").addEventListener("change", async function (event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const { data: sessionData } = await supabaseClient.auth.getSession();
+  const userId = sessionData.session.user.id;
+
+  const url = await uploadImagem(file, userId);
+  if (!url) return;
+
+  await supabaseClient
+    .from('configuracoes_usuario')
+    .update({ logo: url })
+    .eq('user_id', userId);
+
+  document.getElementById("logoSistema").src = url;
+});
+  
 </script>
 
 <style>
@@ -677,7 +686,16 @@ margin-top:120px;
 <div class="app">
 
 <div class="sidebar">
-<img id="logoSistema" src="LogoTransparenteNova.png">
+  <img id="logoSistema" src="LogoTransparenteNova.png" width="150">
+
+  <br><br>
+
+  <input type="file" id="inputLogo" accept="image/*" style="display:none">
+
+  <button onclick="document.getElementById('inputLogo').click()">
+    Alterar Logo
+  </button>
+</div>
 <button onclick="show('inicio')">🏠 Início</button>
 <button onclick="show('produtos')">📦 Produtos</button>
 <button onclick="show('pdv')">🛒 Vendas</button>
@@ -4570,7 +4588,6 @@ document.documentElement.style.setProperty('--bg-sistema', `url(${bg})`);
 }
 
 }
-
 
 
 </script>
