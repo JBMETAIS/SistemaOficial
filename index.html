@@ -1062,6 +1062,26 @@ areaPersonalizacao.style.display = "block";
 
 
 
+async function uploadImagem(file, userId) {
+  const fileName = `logo-${userId}-${Date.now()}`;
+
+  const { data, error } = await supabaseClient.storage
+    .from('logos') // nome do bucket
+    .upload(fileName, file);
+
+  if (error) {
+    console.error('Erro ao subir imagem:', error);
+    return null;
+  }
+
+  const { data: publicUrl } = supabaseClient.storage
+    .from('logos')
+    .getPublicUrl(fileName);
+
+  return publicUrl.publicUrl;
+}
+  
+
 async function salvarTema(){
 
 const user = (await supabaseClient.auth.getUser()).data.user;
@@ -4522,57 +4542,59 @@ clientesDevedores;
 
   function previewTema(){
 
-const corPrimaria = document.getElementById("corPrimaria").value;
-const corSecundaria = document.getElementById("corSecundaria").value;
+  const corPrimaria = document.getElementById("corPrimaria").value;
+  const corSecundaria = document.getElementById("corSecundaria").value;
 
-const logoInput = document.getElementById("logoInput");
-const bgInput = document.getElementById("bgInput");
+  const logoInput = document.getElementById("logoInput");
+  const bgInput = document.getElementById("bgInput");
 
-// 🎨 CORES
-document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
-document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
+  // 🎨 CORES (ok manter no localStorage)
+  document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
+  document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
 
-// 🖼️ LOGO
-if(logoInput.files && logoInput.files[0]){
-const reader = new FileReader();
+  localStorage.setItem("corPrimaria", corPrimaria);
+  localStorage.setItem("corSecundaria", corSecundaria);
 
-reader.onload = function(e){
-document.querySelector(".sidebar img").src = e.target.result;
-localStorage.setItem("logo", e.target.result);
-}
+  // 🖼️ LOGO (SÓ PREVIEW, NÃO SALVAR)
+  if (logoInput.files && logoInput.files[0]) {
+    const reader = new FileReader();
 
-reader.readAsDataURL(logoInput.files[0]);
-}
+    reader.onload = function(e){
+      document.querySelector(".sidebar img").src = e.target.result;
+      // ❌ NÃO salvar no localStorage
+    }
 
-// 🌄 BACKGROUND
-if(bgInput.files && bgInput.files[0]){
-const reader2 = new FileReader();
+    reader.readAsDataURL(logoInput.files[0]);
+  }
 
-reader2.onload = function(e){
-document.documentElement.style.setProperty('--bg-sistema', `url(${e.target.result})`);
-localStorage.setItem("bg", e.target.result);
-}
+  // 🌄 BACKGROUND (SÓ PREVIEW)
+  if (bgInput.files && bgInput.files[0]) {
+    const reader2 = new FileReader();
 
-reader2.readAsDataURL(bgInput.files[0]);
-}
+    reader2.onload = function(e){
+      document.documentElement.style.setProperty('--bg-sistema', `url(${e.target.result})`);
+      // ❌ NÃO salvar no localStorage
+    }
 
+    reader2.readAsDataURL(bgInput.files[0]);
+  }
 }
 
 function aplicarImagens(){
 
-const logo = localStorage.getItem("logo");
-const bg = localStorage.getItem("bg");
+  const corPrimaria = localStorage.getItem("corPrimaria");
+  const corSecundaria = localStorage.getItem("corSecundaria");
 
-if(logo){
-document.querySelector(".sidebar img").src = logo;
+  if(corPrimaria){
+    document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
+  }
+
+  if(corSecundaria){
+    document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
+  }
+
+  // ❌ NÃO usar logo/bg do localStorage
 }
-
-if(bg){
-document.documentElement.style.setProperty('--bg-sistema', `url(${bg})`);
-}
-
-}
-
 
 
 </script>
