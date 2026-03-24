@@ -215,14 +215,56 @@ margin-bottom:20px;
     margin-bottom: 10px;
 }
 
-input,select{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:6px;
-border:1px solid #ccc;
+
+.card-config {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 30px auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+  
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: 0.2s;
 }
 
+input:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+  outline: none;
+}
+
+
+
+.upload-box {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.upload-box:hover {
+  border-color: var(--cor-primaria);
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: -1;
+}
+  
+  
 button.primary{
 background:var(--cor-primaria);
 border:0;
@@ -270,10 +312,12 @@ cursor:pointer;
 transition:0.2s;
 }
 
-   button.primary{
-background: var(--cor-primaria);
+ button.primary {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
 }
-
 
    button.red{
 background: var(--vermelho);
@@ -944,23 +988,27 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 <button class="primary" onclick="salvarConfig()">Salvar</button>
 </div>
 
-<!-- PERSONALIZAÇÃO -->
-<div id="areaPersonalizacao" style="display:none;">
-<h2>Personalização do Sistema</h2>
+<div class="card-config">
 
-<label>Cor Principal</label>
-<input type="color" id="corPrimaria" onchange="previewTema()">
+  <h2>🎨 Personalização do Sistema</h2>
 
-<label>Cor Secundária</label>
-<input type="color" id="corSecundaria" onchange="previewTema()">
+  <label>Cor Principal</label>
+  <input type="color" id="corPrimaria">
 
-<label>Logo</label>
-<input type="file" id="logoInput" onchange="previewTema()">
+  <label>Cor Secundária</label>
+  <input type="color" id="corSecundaria">
 
-<label>Papel de parede</label>
-<input type="file" id="bgInput" onchange="previewTema()">
+  <label>Logo</label>
+  <div class="upload-box">
+  <input type="file" id="logoInput">
+  <span>📁 Clique ou arraste o logo</span>
+</div>
 
-<button class="primary" onclick="salvarTema()">Salvar Tema</button>
+  <label>Papel de parede</label>
+  <input type="file" id="bgInput">
+
+  <button class="primary" onclick="salvarTema()">Salvar Tema</button>
+
 </div>
 
 </section>
