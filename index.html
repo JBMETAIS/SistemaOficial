@@ -993,19 +993,19 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
   <h2>🎨 Personalização do Sistema</h2>
 
   <label>Cor Principal</label>
-  <input type="color" id="corPrimaria">
+  <input type="color" id="corPrimaria" oninput="previewTema()">
 
   <label>Cor Secundária</label>
-  <input type="color" id="corSecundaria">
+  <input type="color" id="corSecundaria" oninput="previewTema()">
 
   <label>Logo</label>
   <div class="upload-box">
-  <input type="file" id="logoInput">
+  <input type="file" id="logoInput" onchange="previewTema()">
   <span>📁 Clique ou arraste o logo</span>
 </div>
 
   <label>Papel de parede</label>
-  <input type="file" id="bgInput">
+  <input type="file" id="bgInput" onchange="previewTema()">
 
   <button class="primary" onclick="salvarTema()">Salvar Tema</button>
 
@@ -4573,46 +4573,36 @@ clientesDevedores;
 }
 
 
-  function previewTema(){
-
+  function previewTema() {
   const corPrimaria = document.getElementById("corPrimaria").value;
   const corSecundaria = document.getElementById("corSecundaria").value;
+  const logoInput = document.getElementById("logoInput").files[0];
+  const bgInput = document.getElementById("bgInput").files[0];
 
-  const logoInput = document.getElementById("logoInput");
-  const bgInput = document.getElementById("bgInput");
-
-  // 🎨 CORES (ok manter no localStorage)
+  // Aplica cores
   document.documentElement.style.setProperty('--cor-primaria', corPrimaria);
   document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
 
-  localStorage.setItem("corPrimaria", corPrimaria);
-  localStorage.setItem("corSecundaria", corSecundaria);
-
-  // 🖼️ LOGO (SÓ PREVIEW, NÃO SALVAR)
-  if (logoInput.files && logoInput.files[0]) {
+  // Preview logo
+  if (logoInput) {
     const reader = new FileReader();
-
-    reader.onload = function(e){
-      document.querySelector(".sidebar img").src = e.target.result;
-      // ❌ NÃO salvar no localStorage
-    }
-
-    reader.readAsDataURL(logoInput.files[0]);
+    reader.onload = function (e) {
+      document.getElementById("logoPreview").src = e.target.result;
+    };
+    reader.readAsDataURL(logoInput);
   }
 
-  // 🌄 BACKGROUND (SÓ PREVIEW)
-  if (bgInput.files && bgInput.files[0]) {
-    const reader2 = new FileReader();
-
-    reader2.onload = function(e){
-      document.documentElement.style.setProperty('--bg-sistema', `url(${e.target.result})`);
-      // ❌ NÃO salvar no localStorage
-    }
-
-    reader2.readAsDataURL(bgInput.files[0]);
+  // Preview background
+  if (bgInput) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.body.style.backgroundImage = `url(${e.target.result})`;
+    };
+    reader.readAsDataURL(bgInput);
   }
 }
 
+  
 function aplicarImagens(){
 
   const corPrimaria = localStorage.getItem("corPrimaria");
