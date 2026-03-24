@@ -1036,6 +1036,28 @@ if(id==="inicio") atualizarDashboard();
 
 
 
+function aplicarTema(config) {
+  if (!config) return;
+
+  document.documentElement.style.setProperty('--cor-primaria', config.cor_primaria);
+  document.documentElement.style.setProperty('--cor-secundaria', config.cor_secundaria);
+}
+
+
+function aplicarImagens(config) {
+  if (!config) return;
+
+  if (config.logo) {
+    document.querySelector(".sidebar img").src = config.logo;
+  }
+
+  if (config.background) {
+    document.documentElement.style.setProperty('--bg-sistema', `url(${config.background})`);
+  }
+}
+  
+  
+
 function abrirEmpresa(){
 areaEmpresa.style.display = "block";
 areaPersonalizacao.style.display = "none";
