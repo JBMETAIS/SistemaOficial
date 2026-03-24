@@ -176,14 +176,21 @@ margin:0 auto 20px;
 }
 
 .sidebar button {
-  background: transparent;
-  color: #fff;
-  border: 1px solid var(--cor-primaria);
+  width:100%;
+  padding:15px;
+  margin-bottom:10px;
+  border:0;
+  background: var(--cor-primaria); /* ✅ agora segue o tema */
+  color:#fff;
+  font-size:15px;
+  cursor:pointer;
+  border-radius:8px;
 }
 
 .sidebar button:hover {
-  background: var(--cor-primaria);
-  color: #000;
+  background: var(--cor-secundaria); /* 🔥 melhor UX */
+  color:#000;
+  font-weight:bold;
 }
 
 .main{
