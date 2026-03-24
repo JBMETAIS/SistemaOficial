@@ -41,7 +41,7 @@ async function verificarLogin() {
       .from('configuracoes_usuario')
       .select('*')
       .eq('user_id', userId)
-      .single(); // se você quer apenas um registro
+      
 
     if (configError) {
       console.error("Erro ao buscar configurações:", configError);
