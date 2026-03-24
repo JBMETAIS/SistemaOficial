@@ -1066,48 +1066,49 @@ async function salvarTema(){
 
 const user = (await supabaseClient.auth.getUser()).data.user;
 
+// 🔥 pega config atual
+const { data: atual } = await supabaseClient
+.from("configuracoes_usuario")
+.select("*")
+.eq("user_id", user.id)
+.single();
+
 const corPrimaria = document.getElementById("corPrimaria").value;
 const corSecundaria = document.getElementById("corSecundaria").value;
 
 const logoInput = document.getElementById("logoInput");
 const bgInput = document.getElementById("bgInput");
 
-let logoUrl = null;
-let bgUrl = null;
+let logoUrl = atual?.logo || null;
+let bgUrl = atual?.background || null;
 
 // upload logo
 if(logoInput.files[0]){
-logoUrl = await uploadImagem(logoInput.files[0], "logos");
+  logoUrl = await uploadImagem(logoInput.files[0], "logos");
 }
 
 // upload background
 if(bgInput.files[0]){
-bgUrl = await uploadImagem(bgInput.files[0], "bg");
+  bgUrl = await uploadImagem(bgInput.files[0], "bg");
 }
 
-// 🔥 UPSERT (cria ou atualiza)
 await supabaseClient
 .from("configuracoes_usuario")
 .upsert({
-user_id: user.id,
-cor_primaria: corPrimaria,
-cor_secundaria: corSecundaria,
-logo: logoUrl,
-background: bgUrl
+  user_id: user.id,
+  cor_primaria: corPrimaria,
+  cor_secundaria: corSecundaria,
+  logo: logoUrl,
+  background: bgUrl
 });
 
 alert("Tema salvo!");
+
+// 🔥 aplica na hora
+aplicarTema();
 }
 
-  async function aplicarTema(){
-
-const user = (await supabaseClient.auth.getUser()).data.user;
-
-const { data } = await supabaseClient
-.from("configuracoes_usuario")
-.select("*")
-.eq("user_id", user.id)
-.single();
+ function aplicarTema(data){
 
 if(!data) return;
 
