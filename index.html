@@ -1116,7 +1116,7 @@ async function salvarTema(){
   let bgUrl = atual?.background || null;
 
   if (logoInput.files[0]) {
-    logoUrl = await uploadImagem(logoInput.files[0], "logos");
+    logoUrl = await uploadImagem(logoInput.files[0], user.id);
   }
 
   if (bgInput.files[0]) {
