@@ -1081,7 +1081,9 @@ async function uploadImagem(file, userId) {
 
   const { data, error } = await supabaseClient.storage
     .from('logos') // nome do bucket
-    .upload(fileName, file);
+    .upload(fileName, file, {
+  upsert: true
+});
 
   if (error) {
     console.error('Erro ao subir imagem:', error);
@@ -1120,7 +1122,7 @@ async function salvarTema(){
   }
 
   if (bgInput.files[0]) {
-    bgUrl = await uploadImagem(bgInput.files[0], "logos");
+    bgUrl = await uploadImagem(bgInput.files[0], user.id);
   }
 
   await supabaseClient
@@ -1133,10 +1135,14 @@ async function salvarTema(){
       background: bgUrl
     });
 
-  alert("Tema salvo!");
+ alert("Tema salvo!");
 
-  aplicarTema();
-}
+aplicarTema();
+
+aplicarImagens({
+  logo: logoUrl,
+  background: bgUrl
+});
 
 
 
