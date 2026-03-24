@@ -310,6 +310,36 @@ tr{
 height:48px;
 }
 
+
+
+.container-config {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card-config {
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.titulo-secao {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="file"] {
+    padding: 8px;
+}
+
+
+  
 .pdv-container{display:flex;gap:20px}
 .pdv-left{flex:2}
 .pdv-right{flex:1}
@@ -948,11 +978,15 @@ style="padding:8px;width:300px;margin-bottom:10px;border-radius:6px;border:1px s
 <div id="areaPersonalizacao" style="display:none;">
 <h2>Personalização do Sistema</h2>
 
-<label>Cor Principal</label>
-<input type="color" id="corPrimaria" onchange="previewTema()">
+<div class="form-group">
+    <label>Cor Principal</label>
+    <input type="text" id="corPrincipal">
+</div>
 
-<label>Cor Secundária</label>
-<input type="color" id="corSecundaria" onchange="previewTema()">
+<div class="form-group">
+    <label>Cor Secundária</label>
+    <input type="text" id="corSecundaria">
+</div>
 
 <label>Logo</label>
 <input type="file" id="logoInput" onchange="previewTema()">
@@ -4578,10 +4612,38 @@ function aplicarImagens(){
     document.documentElement.style.setProperty('--cor-secundaria', corSecundaria);
   }
 
-  // ❌ NÃO usar logo/bg do localStorage
 }
+</script>
 
+<!-- ✅ AQUI ENTRA O PASSO 2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css">
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+<!-- ✅ DEPOIS DISSO, ATIVA O COLOR PICKER -->
+<script>
+$(document).ready(function() {
+
+    $("#corPrincipal").spectrum({
+        type: "component",
+        showPalette: true,
+        showInput: true,
+        showSelectionPalette: true,
+        preferredFormat: "hex",
+        localStorageKey: "cores_recentes"
+    });
+
+    $("#corSecundaria").spectrum({
+        type: "component",
+        showPalette: true,
+        showInput: true,
+        showSelectionPalette: true,
+        preferredFormat: "hex",
+        localStorageKey: "cores_recentes"
+    });
+
+});
 </script>
 
 </body>
