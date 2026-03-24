@@ -14,7 +14,6 @@ visibility: hidden;
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -24,22 +23,39 @@ const SUPABASE_KEY = "sb_publishable_k_WH1HT6JN_QwJCV3GN2Gw_1FqLc34l";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function verificarLogin() {
-try {
-const { data } = await supabaseClient.auth.getSession();
+  try {
+    const { data: sessionData } = await supabaseClient.auth.getSession();
 
-if (!data.session) {
-window.location.replace("login.html");
-} else {
-document.body.style.visibility = "visible";
-}
+    if (!sessionData.session) {
+      window.location.replace("login.html");
+      return;
+    } else {
+      document.body.style.visibility = "visible";
+    }
 
-aplicarTema();
-aplicarImagens();
-   
-} catch (error) {
-console.error("Erro ao verificar login:", error);
-window.location.replace("login.html");
-}
+    // Pega o ID do usuário logado
+    const userId = sessionData.session.user.id;
+
+    // Busca as configurações do usuário
+    const { data: configs, error: configError } = await supabaseClient
+      .from('configuracoes_usuario')
+      .select('*')
+      .eq('user_id', userId)
+      .single(); // se você quer apenas um registro
+
+    if (configError) {
+      console.error("Erro ao buscar configurações:", configError);
+    } else {
+      console.log("Configurações do usuário:", configs);
+      // Aqui você chama suas funções que aplicam o tema e imagens
+      aplicarTema(configs);
+      aplicarImagens(configs);
+    }
+
+  } catch (error) {
+    console.error("Erro ao verificar login:", error);
+    window.location.replace("login.html");
+  }
 }
 
 verificarLogin();
