@@ -39,6 +39,7 @@ async function verificarLogin() {
       .from('configuracoes_usuario')
       .select('*')
       .eq('user_id', userId);
+      .maybeSingle();
 
     if (configError) {
       console.error("Erro ao buscar configurações:", configError);
@@ -1090,7 +1091,7 @@ const { data: atual } = await supabaseClient
 .from("configuracoes_usuario")
 .select("*")
 .eq("user_id", user.id)
-.single();
+.maybeSingle()
 
 const corPrimaria = document.getElementById("corPrimaria").value;
 const corSecundaria = document.getElementById("corSecundaria").value;
